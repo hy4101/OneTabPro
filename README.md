@@ -1,4 +1,4 @@
-##项目名称：OneTab Pro
+项目名称：OneTab Pro
 
 OneTab Pro更实用的新一代标签页管理工具
 
@@ -11,3 +11,5 @@ OneTab Pro更实用的新一代标签页管理工具
 edge版本：https://microsoftedge.microsoft.com/addons/detail/onetab-pro/fnicjegeeahadhedheialkjmmmmmgfnc
 
 chrome版本：https://chrome.google.com/webstore/detail/pkiknjbagbmlmbdgcacgfojgplcojihf
+
+![Image text](https://raw.githubusercontent.com/hongmaju/light7Local/master/img/productShow/20170518152848.png)
