@@ -1,0 +1,493 @@
+{
+  "extName": {
+    "message": "BdTab 新标签页",
+    "description": "BdTab(Browser Desktop)新标签页"
+  },
+  "extDescription": {
+    "message": "OneTab Pro更实用的新一代标签页管理工具,更友好的管理界面,更友好的使用体验,支持数据云同步",
+    "description": "节省高达95%的内存和减少标签混乱\n当您发现自己有太多标签时，单击OneTab Pro图标将所有标签转换为列表。您可以重新恢复它或者删除。\n\n隐私保障\n\n关于您的标签的信息永远不会传输或透露给OneTab Pro开发人员标签永远不会被共享。 "
+  },
+  "setting": {
+    "message": "设 置"
+  },
+  "notes": {
+    "message": "笔 记"
+  },
+  "resources": {
+    "message": "我的资源"
+  },
+  "personalise": {
+    "message": "个性化"
+  },
+  "addApp": {
+    "message": "添 加"
+  },
+  "options": {
+    "message": "选 项"
+  },
+  "bookmarksTabs": {
+    "message": "书签 / 标签"
+  },
+  "reloadData": {
+    "message": "重载数据"
+  },
+  "reloadingData": {
+    "message": "正在重载数据..."
+  },
+  "login": {
+    "message": "请登录后体验"
+  },
+  "noName": {
+    "message": "无名称"
+  },
+  "name": {
+    "message": "名称"
+  },
+  "settingAppInfo": {
+    "message": "设置此信息"
+  },
+  "removeFromToolbar": {
+    "message": "从工具栏中移除"
+  },
+  "delete": {
+    "message": "删除"
+  },
+  "release": {
+    "message": "释放"
+  },
+  "openAll": {
+    "message": "打开所有"
+  },
+  "reduction": {
+    "message": "还原"
+  },
+  "creationTime": {
+    "message": "创建时间"
+  },
+  "deleteTime": {
+    "message": "删除时间"
+  },
+  "new": {
+    "message": "新建"
+  },
+  "now": {
+    "message": "现在"
+  },
+  "allRightsReserved": {
+    "message": "版权所有"
+  },
+  "privacyPolicy": {
+    "message": "隐私策略"
+  },
+  "selectImage": {
+    "message": "可将文件拖放到此处"
+  },
+  "chooseFromGallery": {
+    "message": "从图库选择"
+  },
+  "confirm": {
+    "message": "确 认"
+  },
+  "applicationName": {
+    "message": "应用名称"
+  },
+  "applicationURL": {
+    "message": "应用地址"
+  },
+  "myApplications": {
+    "message": "我的应用"
+  },
+  "wastebasket": {
+    "message": "废弃篓"
+  },
+  "shortcutToWakeUp": {
+    "message": "快捷键唤醒/关闭 搜索框"
+  },
+  "desktopShowApp": {
+    "message": "显示桌面应用"
+  },
+  "desktopShowAppName": {
+    "message": "显示应用名称"
+  },
+  "desktopShowTool": {
+    "message": "显示工具条"
+  },
+  "showSearchBox": {
+    "message": "显示搜索框"
+  },
+  "showRecordNumber": {
+    "message": "显示备案号"
+  },
+  "showKeywordFilteringBox": {
+    "message": "显示 Keyword Filtering 框"
+  },
+  "backgroundSettings": {
+    "message": "背景设置"
+  },
+  "openWebsiteNewTab": {
+    "message": "在新标签页中打开网站"
+  },
+  "openWebsiteNewTabShort": {
+    "message": "新标签页打开"
+  },
+  "original": {
+    "message": "原"
+  },
+  "generalSettings": {
+    "message": "通用设置"
+  },
+  "underConstruction": {
+    "message": "建设中"
+  },
+  "notPrivate": {
+    "message": "暂不支持文件夹设为私密"
+  },
+  "moreThanJustAnewTabPage": {
+    "message": "不止是新标签页"
+  },
+  "expandDescription": {
+    "message": "是一款实用的工具类浏览器扩展。\n          功能丰富，操作简单，可以给您带来最优的上网体验。\n          并且您可在多个不同的浏览器之间切换使用，而这完全不用考虑数据备份的问题，"
+  },
+  "support": {
+    "message": "支持"
+  },
+  "seeMore": {
+    "message": "查看更多"
+  },
+  "review": {
+    "message": "评论"
+  },
+  "downloadApp": {
+    "message": "下载App端（BdTab网络收藏夹）"
+  },
+  "shoppingSupport": {
+    "message": "购物支持"
+  },
+  "browserPluginLibrary": {
+    "message": "浏览器插件库"
+  },
+  "supportDescription": {
+    "message": "我们尽可能的将工具免费为您服务，但对于我们团队来说需要额外的费用来支撑这些服务。\n          所以喜欢它或者觉得它还不错的，就请支持我们吧(或广而告之)。"
+  },
+  "aliPay": {
+    "message": "支付宝"
+  },
+  "wechatPay": {
+    "message": "微信"
+  },
+  "weChatPublicNccount": {
+    "message": "微信公众号(客服) / QQ群"
+  },
+  "howToAddCustom": {
+    "message": "如何自定义添加?"
+  },
+  "interface": {
+    "message": "接口"
+  },
+  "beginning": {
+    "message": "开头"
+  },
+  "or": {
+    "message": "或"
+  },
+  "cancel": {
+    "message": "取 消"
+  },
+  "market": {
+    "message": "市场"
+  },
+  "loginPassword": {
+    "message": "登录密码"
+  },
+  "pleaseEnter": {
+    "message": "请输入"
+  },
+  "pleaseEnterYourLoginPassword": {
+    "message": "请输入您的登录密码"
+  },
+  "setSuccessfully": {
+    "message": "设置成功"
+  },
+  "addedSuccessfully": {
+    "message": "成功"
+  },
+  "addToDesktopOrTool": {
+    "message": "请选择添加到主页或工具栏"
+  },
+  "newPassword": {
+    "message": "新密码"
+  },
+  "verificationCode": {
+    "message": "验证码"
+  },
+  "send": {
+    "message": "发送"
+  },
+  "mailbox": {
+    "message": "邮箱"
+  },
+  "password": {
+    "message": "密码"
+  },
+  "signIn": {
+    "message": "去登录"
+  },
+  "registeredForget": {
+    "message": "注册 / 忘记"
+  },
+  "congratulations": {
+    "message": "恭喜您"
+  },
+  "source": {
+    "message": "来源"
+  },
+  "view": {
+    "message": "查看"
+  },
+  "target": {
+    "message": "目标"
+  },
+  "open": {
+    "message": "打开"
+  },
+  "permanentlyDeleted": {
+    "message": "已永久删除"
+  },
+  "restored": {
+    "message": "已还原"
+  },
+  "desktopApplication": {
+    "message": "桌面应用"
+  },
+  "toolbar": {
+    "message": "工具栏"
+  },
+  "bookmarks": {
+    "message": "书 签"
+  },
+  "pullBookmarks": {
+    "message": "拉取书签"
+  },
+  "image": {
+    "message": "图 片"
+  },
+  "video": {
+    "message": "视 频"
+  },
+  "wallpaper": {
+    "message": "壁 纸"
+  },
+  "yourGalleryIsEmpty": {
+    "message": "您的图库空空如也，"
+  },
+  "yourVideoIsEmpty": {
+    "message": "您的视频库空空如也，"
+  },
+  "howAddPicturesGallery": {
+    "message": "如何往图库中添加图片，"
+  },
+  "howAddVideoGallery": {
+    "message": "如何往视频库中添加视频，"
+  },
+  "setAsAallpaper": {
+    "message": "设为壁纸"
+  },
+  "thirdPartyMiImage": {
+    "message": "第三方（迷图）"
+  },
+  "usedBefore": {
+    "message": "使用过的"
+  },
+  "wallpaperSource": {
+    "message": "壁纸源"
+  },
+  "collection": {
+    "message": "收藏"
+  },
+  "default": {
+    "message": "默认"
+  },
+  "aggregateSearch": {
+    "message": "聚合搜索"
+  },
+  "dragAggregateSearch": {
+    "message": "按住Ctrl键可拖拽"
+  },
+  "enterToOpen": {
+    "message": "回车打开"
+  },
+  "download": {
+    "message": "下载"
+  },
+  "loadingPulling": {
+    "message": "正在拉取浏览器数据书签"
+  },
+  "deadLink": {
+    "message": "死链接、空链接检测中，这需要一点时间，请不要做别的操作"
+  },
+  "setPrivate": {
+    "message": "设为私有"
+  },
+  "addDesktop": {
+    "message": "添加到主页"
+  },
+  "addToToolbar": {
+    "message": "添加到工具栏"
+  },
+  "useFontIcons": {
+    "message": "使用字体图标"
+  },
+  "background": {
+    "message": "背景"
+  },
+  "font": {
+    "message": "字体"
+  },
+  "refreshed": {
+    "message": "已刷新"
+  },
+  "restore": {
+    "message": "恢复"
+  },
+  "putAway": {
+    "message": "收起"
+  },
+  "labels": {
+    "message": "个标签"
+  },
+  "tag": {
+    "message": "标 签"
+  },
+  "choice": {
+    "message": "精 选"
+  },
+  "private": {
+    "message": "私 有"
+  },
+  "siteSearch": {
+    "message": "搜 索"
+  },
+  "added": {
+    "message": "已添加"
+  },
+  "newNote": {
+    "message": "新笔记"
+  },
+  "startEditing": {
+    "message": "点击开始编辑"
+  },
+  "service": {
+    "message": "服 务"
+  },
+  "desktop": {
+    "message": "桌 面"
+  },
+  "security": {
+    "message": "安 全"
+  },
+  "overview": {
+    "message": "概 览"
+  },
+  "platforms": {
+    "message": "平 台"
+  },
+  "platformsSupportMessage": {
+    "message": "跨平台网络收藏/同步软件，已支持以下平台/版本"
+  },
+  "columns": {
+    "message": "列数"
+  },
+  "row": {
+    "message": "行数"
+  },
+  "columnSpacing": {
+    "message": "列间距"
+  },
+  "rowSpacing": {
+    "message": "行间距"
+  },
+  "iconSize": {
+    "message": "图标大小"
+  },
+  "radiusSize": {
+    "message": "圆角大小"
+  },
+  "return": {
+    "message": "自定义添加"
+  },
+  "notAddFolder": {
+    "message": "文件夹暂时无法添加"
+  },
+  "batchUpdateFavoritesIcon": {
+    "message": "您确定要批量更新收藏夹内（没有图标的）的网站图标吗？"
+  },
+  "pleaseContactCustomerService": {
+    "message": "操作失败，请联系客服！"
+  },
+  "againLogin": {
+    "message": "您的登录信息已过期，请重新登录"
+  },
+  "currentWindow": {
+    "message": "当前窗口"
+  },
+  "uploadLogo": {
+    "message": "请上传logo"
+  },
+  "pullBookmark": {
+    "message": "正在拉取浏览器书签数据，请稍等"
+  },
+  "synchronizationSuccessful": {
+    "message": "数据同步成功"
+  },
+  "fuzziness": {
+    "message": "模糊度"
+  },
+  "openAggregateSearch": {
+    "message": "打开 '聚合搜索'"
+  },
+  "markAd": {
+    "message": "标记广告"
+  },
+  "addAsBookmark": {
+    "message": "添加为书签"
+  },
+  "saveSelectedContent": {
+    "message": "收藏选中内容"
+  },
+  "savePicture": {
+    "message": "收藏图片"
+  },
+  "setBrowserDesktopWallpaper": {
+    "message": "设为BdTab主页壁纸"
+  },
+  "saveVideo": {
+    "message": "收藏视频"
+  },
+  "enableColorBackground": {
+    "message": "启用纯色背景"
+  },
+  "showOrHideFilters": {
+    "message": "显示或隐藏过滤器"
+  },
+  "showOrHideTool": {
+    "message": "显示或隐藏主页底部的工具栏"
+  },
+  "showAppNameText": {
+    "message": "显示或隐藏主页应用的名称"
+  },
+  "showSearchToolText": {
+    "message": "设置显示或者隐藏主页的聚合搜索框"
+  },
+  "currentTextColor": {
+    "message": "当前文字颜色"
+  },
+  "currentBackgroundColor": {
+    "message": "当前背景色"
+  },
+  "currentSearchBoxBackgroundColor": {
+    "message": "当前搜索框背景颜色"
+  },
+  "showRecordNumberText": {
+    "message": "显示或隐藏底部的网站备案号：“备案号：闽ICP备17023906号-7”"
+  }
+}

@@ -1,0 +1,493 @@
+{
+  "extName": {
+    "message": "BdTab(Browser Desktop) New Tab",
+    "description": "BdTab(Browser Desktop) New Tab"
+  },
+  "extDescription": {
+    "message": "OneTab Pro is a new generation of more practical TAB management tools, more user-friendly management interface, more user friendly experience, and support for data cloud synchronization",
+    "description": "Save up to 95% of memory and reduce label clutter \\n When you find yourself with too many tabs, click the OneTab Pro icon to convert all the tabs into a list. You can restore it or delete it. \\n\\n Privacy protection \\n\\n \\n\\n Information about your tag will never be transmitted or revealed to OneTab Pro developers the tag will never be shared."
+  },
+  "setting": {
+    "message": "Settings"
+  },
+  "notes": {
+    "message": "Notes"
+  },
+  "resources": {
+    "message": "My resourse"
+  },
+  "personalise": {
+    "message": "Personalise"
+  },
+  "addApp": {
+    "message": "Add application"
+  },
+  "options": {
+    "message": "Options"
+  },
+  "bookmarksTabs": {
+    "message": "Bookmark / Tag"
+  },
+  "reloadData": {
+    "message": "Overloading data"
+  },
+  "reloadingData": {
+    "message": "Reloading data..."
+  },
+  "login": {
+    "message": "Please log in to experience"
+  },
+  "noName": {
+    "message": "No name"
+  },
+  "name": {
+    "message": "name"
+  },
+  "settingAppInfo": {
+    "message": "Set this information"
+  },
+  "removeFromToolbar": {
+    "message": "Remove from toolbar"
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "release": {
+    "message": "release"
+  },
+  "openAll": {
+    "message": "Open all"
+  },
+  "reduction": {
+    "message": "reduction"
+  },
+  "creationTime": {
+    "message": "Creation time"
+  },
+  "deleteTime": {
+    "message": "Delete time"
+  },
+  "new": {
+    "message": "New"
+  },
+  "now": {
+    "message": "Now"
+  },
+  "allRightsReserved": {
+    "message": "All rights reserved"
+  },
+  "privacyPolicy": {
+    "message": "Privacy policy"
+  },
+  "selectImage": {
+    "message": "You can drag and drop files here"
+  },
+  "chooseFromGallery": {
+    "message": " Choose from gallery"
+  },
+  "confirm": {
+    "message": "Confirm"
+  },
+  "applicationName": {
+    "message": "Application Name"
+  },
+  "applicationURL": {
+    "message": "Application address"
+  },
+  "myApplications": {
+    "message": "My application"
+  },
+  "wastebasket": {
+    "message": "Waste basket"
+  },
+  "shortcutToWakeUp": {
+    "message": "Shortcut key wake up / close \"Search box\""
+  },
+  "desktopShowApp": {
+    "message": "Show desktop application"
+  },
+  "desktopShowAppName": {
+    "message": "Show application name"
+  },
+  "desktopShowTool": {
+    "message": "Show toolbars"
+  },
+  "showSearchBox": {
+    "message": "Show search box"
+  },
+  "showRecordNumber": {
+    "message": "Show record number"
+  },
+  "showKeywordFilteringBox": {
+    "message": "Show 'Keyword Filtering' box"
+  },
+  "backgroundSettings": {
+    "message": "Background setting"
+  },
+  "openWebsiteNewTab": {
+    "message": "Open website in new tab"
+  },
+  "openWebsiteNewTabShort": {
+    "message": "New tab opens"
+  },
+  "original": {
+    "message": "Original"
+  },
+  "generalSettings": {
+    "message": "General settings"
+  },
+  "underConstruction": {
+    "message": "Under construction"
+  },
+  "notPrivate": {
+    "message": "The folder is not currently supported as private"
+  },
+  "moreThanJustAnewTabPage": {
+    "message": "Not only new tab"
+  },
+  "expandDescription": {
+    "message": " It is a practical tool browser extension. \\n With rich functions and simple operation, it can bring you the best online experience. \\n And you can switch between multiple different browsers, and you don’t have to worry about data backup at all."
+  },
+  "support": {
+    "message": "Support"
+  },
+  "seeMore": {
+    "message": "See more"
+  },
+  "review": {
+    "message": "Reviews"
+  },
+  "downloadApp": {
+    "message": "Download the App (BdTab network favorites)"
+  },
+  "shoppingSupport": {
+    "message": "Shopping support"
+  },
+  "browserPluginLibrary": {
+    "message": "Browser Plugin Library"
+  },
+  "supportDescription": {
+    "message": "We try our best to provide tools for you for free, but for our team, additional costs are needed to support these services. \n So if you like it or think it's good, please support us (or advertise it)."
+  },
+  "aliPay": {
+    "message": "Alipay"
+  },
+  "wechatPay": {
+    "message": "WechatPay"
+  },
+  "weChatPublicNccount": {
+    "message": "WeChat public account(service) / QQ group"
+  },
+  "howToAddCustom": {
+    "message": "How to deal with custom add?"
+  },
+  "interface": {
+    "message": "Interface"
+  },
+  "beginning": {
+    "message": "Beginning"
+  },
+  "or": {
+    "message": "or"
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "market": {
+    "message": "Market"
+  },
+  "loginPassword": {
+    "message": "Login password"
+  },
+  "pleaseEnter": {
+    "message": "Please input"
+  },
+  "pleaseEnterYourLoginPassword": {
+    "message": "Please enter your login password"
+  },
+  "setSuccessfully": {
+    "message": "Set successfully"
+  },
+  "addedSuccessfully": {
+    "message": "successfully"
+  },
+  "addToDesktopOrTool": {
+    "message": "Please choose to add to the homepage or toolbar"
+  },
+  "newPassword": {
+    "message": "New password"
+  },
+  "verificationCode": {
+    "message": "Vertification code"
+  },
+  "send": {
+    "message": "Send"
+  },
+  "mailbox": {
+    "message": "Email"
+  },
+  "password": {
+    "message": "Password"
+  },
+  "signIn": {
+    "message": "Go login"
+  },
+  "registeredForget": {
+    "message": "Register / Forget"
+  },
+  "congratulations": {
+    "message": "Congratulations"
+  },
+  "source": {
+    "message": "Source"
+  },
+  "view": {
+    "message": "View"
+  },
+  "target": {
+    "message": "Goal"
+  },
+  "open": {
+    "message": "Open"
+  },
+  "permanentlyDeleted": {
+    "message": "Permanently deleted"
+  },
+  "restored": {
+    "message": "Restored"
+  },
+  "restore": {
+    "message": "Restore"
+  },
+  "desktopApplication": {
+    "message": "Desktop application"
+  },
+  "toolbar": {
+    "message": "Toolbar"
+  },
+  "bookmarks": {
+    "message": "Bookmark"
+  },
+  "pullBookmarks": {
+    "message": "pull"
+  },
+  "image": {
+    "message": "Picture"
+  },
+  "video": {
+    "message": "Video"
+  },
+  "wallpaper": {
+    "message": "Wallpaper"
+  },
+  "yourGalleryIsEmpty": {
+    "message": "Your gallery is empty，"
+  },
+  "yourVideoIsEmpty": {
+    "message": "Your video database is empty，"
+  },
+  "howAddPicturesGallery": {
+    "message": "How to add pictures to your gallery?"
+  },
+  "howAddVideoGallery": {
+    "message": "How to add video to your video database?"
+  },
+  "setAsAallpaper": {
+    "message": "Set as wallpaper"
+  },
+  "thirdPartyMiImage": {
+    "message": "第三方（迷图）"
+  },
+  "usedBefore": {
+    "message": "Used"
+  },
+  "wallpaperSource": {
+    "message": "Wallpaper source"
+  },
+  "collection": {
+    "message": "Collection"
+  },
+  "default": {
+    "message": "Default"
+  },
+  "aggregateSearch": {
+    "message": "Aggregate search"
+  },
+  "dragAggregateSearch": {
+    "message": "Hold down the Ctrl key to drag"
+  },
+  "enterToOpen": {
+    "message": "Enter open"
+  },
+  "download": {
+    "message": "Download"
+  },
+  "loadingPulling": {
+    "message": "Pulling browser data bookmarks"
+  },
+  "deadLink": {
+    "message": "死链接、空链接检测中，这需要一点时间，请不要做别的操作"
+  },
+  "setPrivate": {
+    "message": "Set as private"
+  },
+  "addDesktop": {
+    "message": "Add to homepage"
+  },
+  "addToToolbar": {
+    "message": "Add to the toolbar"
+  },
+  "useFontIcons": {
+    "message": "Use font icons"
+  },
+  "background": {
+    "message": "background"
+  },
+  "font": {
+    "message": "font"
+  },
+  "refreshed": {
+    "message": "Refreshed"
+  },
+  "putAway": {
+    "message": "Put away"
+  },
+  "labels": {
+    "message": " Tag"
+  },
+  "tag": {
+    "message": "Tag"
+  },
+  "choice": {
+    "message": "Choice"
+  },
+  "private": {
+    "message": "Private"
+  },
+  "siteSearch": {
+    "message": "Search"
+  },
+  "added": {
+    "message": "Added"
+  },
+  "newNote": {
+    "message": "New note"
+  },
+  "startEditing": {
+    "message": "Click to start editing"
+  },
+  "service": {
+    "message": "Service"
+  },
+  "desktop": {
+    "message": "Desktop"
+  },
+  "security": {
+    "message": "Security"
+  },
+  "overview": {
+    "message": "Overview"
+  },
+  "platforms": {
+    "message": "Platforms"
+  },
+  "platformsSupportMessage": {
+    "message": "Cross-platform network collection synchronization software, has supported the following platform or versions"
+  },
+  "columns": {
+    "message": "Columns"
+  },
+  "row": {
+    "message": "Row"
+  },
+  "columnSpacing": {
+    "message": "ColumnSpacing"
+  },
+  "rowSpacing": {
+    "message": "RowSpacing"
+  },
+  "iconSize": {
+    "message": "IconSize"
+  },
+  "radiusSize": {
+    "message": "RadiusSize"
+  },
+  "return": {
+    "message": "Custom add"
+  },
+  "notAddFolder": {
+    "message": "The folder cannot be added temporarily"
+  },
+  "batchUpdateFavoritesIcon": {
+    "message": "Are you sure you want to batch update the website icons in your favorites (without icons)?"
+  },
+  "pleaseContactCustomerService": {
+    "message": "The operation failed, please contact customer service!"
+  },
+  "againLogin": {
+    "message": "Your login information has expired, please log in again"
+  },
+  "currentWindow": {
+    "message": "Current window"
+  },
+  "uploadLogo": {
+    "message": "Please upload logo"
+  },
+  "pullBookmark": {
+    "message": "Pulling browser bookmark data, please wait"
+  },
+  "synchronizationSuccessful": {
+    "message": "Data synchronization is successful"
+  },
+  "fuzziness": {
+    "message": "fuzziness"
+  },
+  "openAggregateSearch": {
+    "message": "Open 'Aggregate Search'"
+  },
+  "markAd": {
+    "message": "Mark ad"
+  },
+  "addAsBookmark": {
+    "message": "Add as bookmark"
+  },
+  "saveSelectedContent": {
+    "message": "Save selected content"
+  },
+  "savePicture": {
+    "message": "Save picture"
+  },
+  "setBrowserDesktopWallpaper": {
+    "message": "Set as browser desktop wallpaper"
+  },
+  "saveVideo": {
+    "message": "Save video"
+  },
+  "enableColorBackground": {
+    "message": "Enable solid color background"
+  },
+  "showOrHideFilters": {
+    "message": "Show or hide filters"
+  },
+  "showOrHideTool": {
+    "message": "Show or hide the toolbar at the bottom of the homepage"
+  },
+  "showAppNameText": {
+    "message": "Show or hide the name of the homepage app"
+  },
+  "showSearchToolText": {
+    "message": "Show or hide the aggregate search box on the homepage"
+  },
+  "currentTextColor": {
+    "message": "Current text color"
+  },
+  "currentBackgroundColor": {
+    "message": "Current background color"
+  },
+  "currentSearchBoxBackgroundColor": {
+    "message": "Current search box background color"
+  },
+  "showRecordNumberText": {
+    "message": "显示或隐藏底部的网站备案号：“备案号：闽ICP备17023906号-7”"
+  }
+}
