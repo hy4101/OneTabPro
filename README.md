@@ -12,4 +12,5 @@ edge版本：https://microsoftedge.microsoft.com/addons/detail/onetab-pro/fnicje
 
 chrome版本：https://chrome.google.com/webstore/detail/pkiknjbagbmlmbdgcacgfojgplcojihf
 
-![Image text](https://github.com/hy4101/OneTabPro/blob/main/img/1.png)
+![OneTab Pro](https://github.com/hy4101/OneTabPro/blob/main/img/2.png)
+![OneTab Pro](https://github.com/hy4101/OneTabPro/blob/main/img/1.png)
