@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getServiceHost } from './Api';
-import { isAuthorization } from '@/libs/Storage';
 
 export const USER_URL = getServiceHost() + 'tab/';
 const qs = require('qs');

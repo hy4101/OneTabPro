@@ -32,7 +32,7 @@
 import { getUserInfo, isAuthorization, setUserInfo } from '../../../libs/Storage';
 import { toast } from '@/libs/util';
 import Login from './Login.vue';
-import { settingUserAvatarApi } from '@/api/UserApi';
+import { logout, settingUserAvatarApi } from '@/api/UserApi';
 
 export default {
   components: {
@@ -58,6 +58,7 @@ export default {
             localStorage.clear();
             toast('退出成功');
             this.isAuthorization = false;
+            logout();
           }
         }
       });

@@ -39,45 +39,6 @@ export const uuid = () => {
   return uuid.substr(uuid.lastIndexOf('/') + 1);
 };
 
-/**
- * 根据网站url获取host：
- */
-export const getHost = (urlString) => {
-  if (isEmpty(urlString)) {
-    return null;
-  }
-  let index = urlString.indexOf('://');
-  if (index !== -1) {
-    urlString = urlString.substring(index + 3);
-  }
-  index = urlString.indexOf('/');
-  if (index !== -1) {
-    urlString = urlString.substring(0, index);
-  }
-  return urlString;
-};
-
-/**
- * 打开网站
- */
-export const openSite = (url, type = null) => {
-  if (!url.includes('https://') && !url.includes('http://')) {
-    url = 'http://' + url;
-  }
-  if (isEmpty(type)) {
-    try {
-      let desktopOptions = getHashStorage('browser_desktop_setting', 'desktopOptions');
-      let index = desktopOptions.findIndex(ds => ds.type === 'open_web_site_new_tab');
-      let nt = index < 0 ? OPEN_WEB_SITE_NEW_TAB : desktopOptions[index];
-      type = nt.status ? '_blank' : '_self';
-    } catch (e) {
-    }
-  }
-  type = isEmpty(type) ? '_blank' : type;
-
-  window.open(url, type);
-};
-
 export const i18n = (key) => {
   return chrome.i18n.getMessage(key);
 };

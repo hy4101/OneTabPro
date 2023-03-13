@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { getServiceHost } from './Api';
 import md5 from 'js-md5';
-import { getDeviceId } from '../libs/util';
 
 const USER_URL = getServiceHost() + 'visitors/user/';
 const qs = require('qs');
@@ -44,17 +43,6 @@ export const registered = params => {
   let lg = Object.assign({}, params);
   lg.password = md5(lg.password);
   return axios.post(USER_URL + 'registered', lg);
-};
-
-/**
- * 重置密码
- * @returns {AxiosPromise<any>}
- * @param code
- * @param password
- */
-export const resetPassword = (code, password) => {
-  password = md5(password);
-  return axios.post(USER_URL + 'reset-password', { code: code, password: password });
 };
 
 /**

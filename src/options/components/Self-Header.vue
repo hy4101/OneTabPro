@@ -11,7 +11,7 @@
       </div>
     </div>
     <div class="obp-oh-other">
-      <div @click="installBdTab"><h3><a href="">BdTab新标签页</a></h3></div>
+      <div @click="installBdTab"><h3><a href="">IHome新标签页</a></h3></div>
       <div><h3><a href="https://www.miniits.com" target="_blank">网站盒子</a></h3></div>
       <div v-if="!isAuthorization" @click="login"><h3>去登录</h3></div>
       <div v-else @click="login">
@@ -27,7 +27,7 @@ import { getExplorerInfo } from '@/libs/util';
 import { getUserInfo, isAuthorization } from '@/libs/Storage';
 
 export default {
-  name: 'HeadRrr',
+  name: 'SelfHeader',
   data () {
     return {
       userInfo: getUserInfo(),

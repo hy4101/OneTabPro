@@ -1,6 +1,6 @@
 <template>
   <div class="main_app" id="options">
-    <head-rrr></head-rrr>
+    <self-header></self-header>
     <!--    <index></index>-->
     <router-view/>
     <!--    <iframe ref="optionsIframe" :src="iframeSrc" width="100%" height="100%"></iframe>-->
@@ -9,14 +9,14 @@
 
 <script>
 
-import HeadRrr from '../components/HeadRrr.vue';
+import SelfHeader from '../components/Self-Header.vue';
 import EventBus from '@/libs/EventBus';
 import { setStorage } from '@/libs/Storage';
 
 export default {
   name: 'options',
   components: {
-    HeadRrr
+    SelfHeader
   },
   data () {
     return {

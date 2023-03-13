@@ -214,7 +214,7 @@ export default {
           > input {
             border: 0;
             outline: none;
-            height: 96%;
+            height: 90%;
             width: 100%;
             font-weight: bold;
             color: #3c3c3c;
