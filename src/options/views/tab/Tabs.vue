@@ -35,6 +35,7 @@
                 <i class="el-icon-delete" style="color:black;margin-right: 6px;cursor: pointer"
                    v-if="activeGroupIndex>=0"
                    @click="deleteItem(site,index)"></i>
+                <collect @click="iconBtn(site,index)"></collect>
                 <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
                      :src="site.favIconUrl">
                 <i v-else class="el-icon-link  fsb-sl-image" style="color:black;margin-right: 6px"></i>
@@ -56,9 +57,13 @@ import { isAuthorization } from '../../../libs/Storage';
 import { isEmpty, toast } from '../../../libs/util';
 import { deleteApi, deleteTabGroupApi, lockTab, modifyGroupName } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
+import Collect from '../../components/icon/Collect.vue';
 
 export default {
   name: 'tabs',
+  components: {
+    Collect
+  },
   props: {
     activeGroupIndex: {
       type: Number,
@@ -97,6 +102,13 @@ export default {
       if (isAuthorization()) {
         deleteApi(item.id);
       }
+    },
+
+    /**
+     * 收藏标签
+     */
+    iconBtn () {
+
     },
 
     /**

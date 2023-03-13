@@ -110,7 +110,7 @@ export default {
       border-radius: 48px;
       height: 38px;
       overflow: hidden;
-      background: #efefef;
+      background: #ffffff;
       align-items: center;
       padding-left: 10px;
 
@@ -120,7 +120,7 @@ export default {
       }
 
       > input {
-        background: #efefef;
+        background: #ffffff;
         outline: none;
         border: none;
         height: 90%;

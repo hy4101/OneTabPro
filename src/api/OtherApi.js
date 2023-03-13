@@ -58,3 +58,12 @@ export const lockTab = (group, lock) => {
 export const modifyGroupName = (group, name) => {
   return axios.post(USER_URL + 'modify-group-name/' + group + '/' + name);
 };
+
+/**
+ * 收藏标签
+ * @returns {AxiosPromise<any>}
+ * @param id
+ */
+export const collectApi = (id) => {
+  return axios.post(USER_URL + 'collect-tab/' + id);
+};
