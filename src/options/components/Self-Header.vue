@@ -15,7 +15,7 @@
       <div><a href="https://www.miniits.com" target="_blank">网站盒子</a></div>
       <div v-if="!isAuthorization" @click="login">去登录</div>
       <div v-else @click="login">
-        <img :src="userInfo.avatar" style="width: 38px;">
+        <img :src="userInfo.avatar" style="width: 22px;">
       </div>
       <div class="obp-github">
         <a href="https://github.com/hy4101/OneTabPro" target="_blank">
