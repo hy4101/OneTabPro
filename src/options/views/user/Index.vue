@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     logout () {
-      this.$confirm('退出后将清楚所有信息？', '确认信息', {
+      this.$confirm('退出后将清除本地信息？', '确认信息', {
         confirmButtonText: '退出',
         cancelButtonText: '取消',
         callback: (res) => {
