@@ -4,6 +4,7 @@ import { isEmpty } from './util';
 export const USER_INFO_KEY = 'user_info';
 
 export const CACHE_TABS_GROUP = 'cache_tabs_group';
+export const COLLECT_TABS = 'collect_tabs';
 
 export const setStorage = (key, val) => {
   if (isEmpty(val)) {

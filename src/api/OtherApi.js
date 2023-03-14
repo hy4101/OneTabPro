@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { getServiceHost } from './Api';
+import { getStorage, isAuthorization, setStorage } from '@/libs/Storage';
+import { isEmpty, toast } from '@/libs/util';
+import EventBus from '../libs/EventBus';
 
 export const USER_URL = getServiceHost() + 'tab/';
 const qs = require('qs');
@@ -13,12 +16,20 @@ export const saveTabsApi = (params) => {
 };
 
 /**
- * 查看历史记录
+ * 查看标签记录
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export const getTabsApi = () => {
   return axios.get(USER_URL + 'get-tab');
+};
+
+/**
+ * 查看收藏的标签
+ * @returns {AxiosPromise<any>}
+ */
+export const getCollectTabs = () => {
+  return axios.get(USER_URL + 'get-tab-collect');
 };
 
 /**
@@ -62,8 +73,40 @@ export const modifyGroupName = (group, name) => {
 /**
  * 收藏标签
  * @returns {AxiosPromise<any>}
- * @param id
+ * @param tab
  */
-export const collectApi = (id) => {
-  return axios.post(USER_URL + 'collect-tab/' + id);
+export const collectApi = (tab) => {
+  if (isAuthorization()) {
+    axios.post(USER_URL + 'collect-tab/' + tab.id).then(res => {
+      addCollectTab(res.data.data, tab.id);
+    });
+  } else {
+    let sourceId = tab.id;
+    let newTab = Object.assign({}, tab);
+    newTab.sourceId = sourceId;
+    newTab.id = new Date().getTime() + '';
+    addCollectTab(newTab, sourceId);
+  }
 };
+
+function addCollectTab (tab, sourceId) {
+  let mes = '已收藏';
+  if (isEmpty(tab)) {
+    toast(mes);
+    return;
+  }
+  let collectTabs = getStorage('collect_tabs');
+  if (isEmpty(collectTabs)) {
+    collectTabs = [];
+  } else {
+    collectTabs = JSON.parse(collectTabs);
+  }
+  let index = collectTabs.findIndex(s => s.sourceId === sourceId);
+  if (index < 0) {
+    collectTabs.splice(0, 0, tab);
+    setStorage('collect_tabs', JSON.stringify(collectTabs));
+    mes = '收藏成功';
+  }
+  toast(mes);
+  EventBus.$emit('init_tab_data', false);
+}

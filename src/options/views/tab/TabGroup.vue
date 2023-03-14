@@ -5,6 +5,16 @@
       <el-button size="mini" @click="exportHtmlBtn" type="warning">导出</el-button>
     </div>
     <div class="otp-tab-group-list">
+      <div class="otp-tab-item otp-collect" :class="['otp-tab-item',activeIndex===-1?'otp-tab-item-active':'']"
+           v-if="collectTabs.val.length>0"
+           @click="changeTabItem(collectTabs,-1)">
+        <div style="font-weight: bold">
+          我的收藏
+        </div>
+        <div style="font-size: 12px;margin-left: 10px">
+          {{ collectTabs.val.length }}个标签页
+        </div>
+      </div>
       <div :class="['otp-tab-item',activeIndex===index?'otp-tab-item-active':'']" v-for="(item,index) in tabGroups"
            :key="index" @click="changeTabItem(item,index)">
         <div :class="['otp-tab-item-line ',tabGroups.length-1!==index?'otp-tab-item-line-ac':'']">
@@ -27,8 +37,8 @@
 
 <script>
 
-import { CACHE_TABS_GROUP, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
-import { getTabsApi, saveTabsApi } from '../../../api/OtherApi';
+import { CACHE_TABS_GROUP, COLLECT_TABS, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
+import { getCollectTabs, getTabsApi, saveTabsApi } from '../../../api/OtherApi';
 import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 
@@ -37,7 +47,8 @@ export default {
   data () {
     return {
       activeIndex: 0,
-      tabGroups: []
+      tabGroups: [],
+      collectTabs: { val: [] }
     };
   },
   methods: {
@@ -61,7 +72,7 @@ export default {
     /**
      * 保存标签
      */
-    saveTabs (tabItem, isRefresh) {
+    saveTabs (tabItem) {
       this.tabGroups.splice(0, 0, tabItem);
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       this.changeTabItem(tabItem, 0);
@@ -79,16 +90,10 @@ export default {
       this.$emit('change', item, index);
     },
 
-    initTabs () {
-      let temp = getStorage(CACHE_TABS_GROUP);
-      if (!isEmpty(temp)) {
-        temp = JSON.parse(temp);
-        this.tabGroups = temp;
-        this.currentType = temp[0];
-        this.sites = temp[0].val;
-        this.changeTabItem(this.tabGroups[0], 0);
-        return;
-      }
+    /**
+     * 初始化
+     */
+    initTabs (isChange = true) {
       if (isAuthorization()) {
         getTabsApi().then((res) => {
           let _res = res.data.data;
@@ -96,12 +101,41 @@ export default {
             return;
           }
           setStorage(CACHE_TABS_GROUP, JSON.stringify(_res));
-          this.tabGroups = _res;
-          this.currentType = _res[0];
-          this.changeTabItem(this.tabGroups[0], 0);
+          this.setTabGroup(_res, isChange);
         });
+        getCollectTabs().then(res => {
+          let _res = res.data.data;
+          if (isEmpty(_res)) {
+            return;
+          }
+          setStorage(COLLECT_TABS, JSON.stringify(_res));
+          this.collectTabs = { tabGroup: 'collect_id', val: _res };
+        });
+      } else {
+        let temp = getStorage(CACHE_TABS_GROUP);
+        if (!isEmpty(temp)) {
+          temp = JSON.parse(temp);
+          this.setTabGroup(temp, isChange);
+        }
       }
     },
+
+    /**
+     * 设置标签组的值
+     * @param _res
+     * @param isChange
+     */
+    setTabGroup (_res, isChange) {
+      let collectTabs = getStorage('collect_tabs');
+      if (!isEmpty(collectTabs)) {
+        this.collectTabs = { tabGroup: 'collect_id', val: JSON.parse(collectTabs) };
+      }
+      this.tabGroups = _res;
+      if (isChange) {
+        this.changeTabItem(this.tabGroups[0], 0);
+      }
+    },
+
     onFilter (v) {
       if (isEmpty(v)) {
         this.changeTabItem(this.tabGroups[0], 0);
@@ -121,18 +155,32 @@ export default {
       this.changeTabItem({ val: tgs, time: null }, -1);
     },
     exportHtmlBtn () {
-      exportHtml(this.tabGroups);
+      let tabGroups = [...this.tabGroups];
+      let collectTabs = getStorage('collect_tabs');
+      if (!isEmpty(collectTabs)) {
+        collectTabs = { tabGroup: 'collect_id', tabGroupName: '我的收藏', time: '', val: JSON.parse(collectTabs) };
+        tabGroups.splice(0, 0, collectTabs);
+      }
+      exportHtml(tabGroups);
     }
   },
   mounted () {
     this.initTabs();
-    eventBus.$on('updateTabItem', (item, id) => {
-      if (isEmpty(item.val)) {
-        this.tabGroups.splice(this.activeIndex, 1);
+    eventBus.$on('updateTabItem', (item) => {
+      if (item.tabGroup === 'collect_id') {
+        if (item.val.length <= 0) {
+          removeItem('collect_tabs');
+        } else {
+          setStorage('collect_tabs', JSON.stringify(item.val));
+        }
       } else {
-        this.tabGroups.splice(this.activeIndex, 1, item);
+        if (isEmpty(item.val)) {
+          this.tabGroups.splice(this.activeIndex, 1);
+        } else {
+          this.tabGroups.splice(this.activeIndex, 1, item);
+        }
+        setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       }
-      setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     });
     eventBus.$on('deleteGroup', () => {
       this.tabGroups.splice(this.activeIndex, 1);
@@ -245,6 +293,10 @@ export default {
           font-weight: bold;
         }
       }
+    }
+
+    .otp-collect {
+      margin-bottom: 16px;
     }
 
     .otp-tab-item-active {

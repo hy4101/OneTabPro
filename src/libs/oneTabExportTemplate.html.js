@@ -35,7 +35,7 @@ const template1 = '<!DOCTYPE html>\n' +
   '<div class="one-tab-pro-group">\n' +
   '  <div class="one-tab-pro-ad">\n' +
   '    <h1>OneTab Pro Site List</h1>\n' +
-  '    <a href="http://www.bdtab.cn">安装BdTab新标签页插件</a>\n' +
+  '    <a href="http://www.bdtab.cn">安装IHome(原BdTab)新标签页插件</a>\n' +
   '  </div>';
 
 const template2 = '</div>\n' +

@@ -7,7 +7,7 @@
       </div>
       <div>
         <img :src="iconAvatar" style="width:20px;height:20px;border-radius: 10px">
-        可以使用BdTab账户直接登录
+        可以使用IHome(原BdTab)账户直接登录
       </div>
     </div>
     <div class="sss-content">
