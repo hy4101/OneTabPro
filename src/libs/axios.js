@@ -16,7 +16,7 @@ axios.defaults.paramsSerializer = function (params) {
 axios.interceptors.request.use(config => {
   config.headers.common['Authorization'] = getAuthorization();
   config.headers.common['DeviceId'] = 'onetabpro';
-  // config.headers.common['port'] = 'pc_browser';
+  config.headers.common['port'] = 'onetabpro';
   // config.headers.common['Language'] = chrome.i18n.getUILanguage();
   return config;
 }, error => {
