@@ -11,6 +11,9 @@
           </template>
           <template v-else>
             <div style="display: flex;">
+              <el-tooltip effect="dark" content="设置" placement="top-start">
+                <i class="el-icon-s-tools obp-opts-icon" @click="toolbarBtn(10)"></i>
+              </el-tooltip>
               <el-tooltip effect="dark" content="打开所有" placement="top-start">
                 <i class="el-icon-link obp-opts-icon" @click="toolbarBtn(0)"></i>
               </el-tooltip>
@@ -156,6 +159,9 @@ export default {
         this.tabGroupItem.lock = !this.tabGroupItem.lock;
         EventBus.$emit('updateTabItem', this.tabGroupItem);
         lockTab(this.tabGroupItem.tabGroup, this.tabGroupItem.lock);
+      }
+      if (10 === type) {
+
       }
     },
 
