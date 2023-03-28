@@ -44,30 +44,33 @@
                 <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
                      :src="site.favIconUrl">
                 <i v-else class="el-icon-link  fsb-sl-image" style="color:black;margin-right: 6px"></i>
-                <a :href="site.path" target="_blank" class="fsb-sl-info">
+                <div @click="onSite(site,index)" class="fsb-sl-info">
                   {{ site.title }}
-                </a>
+                </div>
               </div>
             </div>
           </template>
         </div>
       </div>
     </div>
+    <setting-dialog :show="isShowSettingDialog" @close="onClose"></setting-dialog>
   </div>
 </template>
 
 <script>
 
-import { isAuthorization } from '../../../libs/Storage';
-import { isEmpty, toast } from '../../../libs/util';
+import { getStorage, isAuthorization } from '../../../libs/Storage';
+import { isEmpty, openSite, toast } from '../../../libs/util';
 import { collectApi, deleteApi, deleteTabGroupApi, lockTab, modifyGroupName } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
 import Collect from '../../components/icon/Collect.vue';
+import SettingDialog from './SettingDialog.vue';
 
 export default {
   name: 'tabs',
   components: {
-    Collect
+    Collect,
+    SettingDialog
   },
   props: {
     activeGroupIndex: {
@@ -85,6 +88,7 @@ export default {
   },
   data () {
     return {
+      isShowSettingDialog: false,
       tabGroupItem: { time: null, val: [] }
     };
   },
@@ -108,7 +112,13 @@ export default {
         deleteApi(item.id);
       }
     },
-
+    onSite (item, index) {
+      let ds = getStorage('delete_site') || 2;
+      if (1 === +ds) {
+        this.deleteItem(item, index);
+      }
+      openSite(item.path);
+    },
     /**
      * 收藏标签
      */
@@ -161,10 +171,12 @@ export default {
         lockTab(this.tabGroupItem.tabGroup, this.tabGroupItem.lock);
       }
       if (10 === type) {
-
+        this.isShowSettingDialog = true;
       }
     },
-
+    onClose () {
+      this.isShowSettingDialog = false;
+    },
     deleteTabGroup () {
       EventBus.$emit('deleteGroup');
       if (isAuthorization()) {

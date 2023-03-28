@@ -72,12 +72,12 @@ export default {
     /**
      * 保存标签
      */
-    saveTabs (tabItem) {
-      this.tabGroups.splice(0, 0, tabItem);
+    saveTabs (groupItem) {
+      this.tabGroups.splice(0, 0, groupItem);
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
-      this.changeTabItem(tabItem, 0);
+      this.changeTabItem(groupItem, 0);
       if (isAuthorization()) {
-        saveTabsApi(tabItem.val).then((res) => {
+        saveTabsApi(groupItem.val).then((res) => {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
         });
       }
@@ -116,6 +116,11 @@ export default {
         if (!isEmpty(temp)) {
           temp = JSON.parse(temp);
           this.setTabGroup(temp, isChange);
+        }
+        temp = getStorage(COLLECT_TABS);
+        if (!isEmpty(temp)) {
+          temp = JSON.parse(temp);
+          this.collectTabs = { tabGroup: 'collect_id', val: temp };
         }
       }
     },
@@ -195,6 +200,7 @@ export default {
     eventBus.$on('filter', this.onFilter);
     eventBus.$on('init_tab_data', this.initTabs);
     eventBus.$on('onUpTab', this.onUpTab);
+    eventBus.$on('saveTabs', this.saveTabs);
   }
 };
 </script>
@@ -297,6 +303,10 @@ export default {
 
     .otp-collect {
       margin-bottom: 16px;
+      padding: 10px 0;
+      border: 1px solid #c8c8c8;
+      border-radius: 10px;
+      justify-content: center;
     }
 
     .otp-tab-item-active {

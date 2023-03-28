@@ -1,5 +1,4 @@
 import EventBus from './EventBus';
-import { getHashStorage } from './Storage';
 import { getHtml } from './oneTabExportTemplate.html.js';
 
 /**
@@ -119,4 +118,24 @@ export const exportHtml = (tabs) => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+/**
+ * 打开网站
+ */
+export const openSite = (url) => {
+  if (!url.includes('https://') && !url.includes('http://')) {
+    url = 'http://' + url;
+  }
+  window.open(url, '_blank');
+};
+
+/**
+ * 实现将字符串转dom
+ * @param xmlString
+ * @returns {Document}
+ */
+export const parseXmlString = (xmlString) => {
+  const parser = new DOMParser();
+  return parser.parseFromString(xmlString, 'text/html');
 };

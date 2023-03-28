@@ -23,7 +23,7 @@ import TabGroup from './TabGroup.vue';
 import Tabs from './Tabs.vue';
 import { isEmpty, toast } from '@/libs/util';
 import {
-  CACHE_TABS_GROUP,
+  CACHE_TABS_GROUP, COLLECT_TABS,
   getStorage
 } from '@/libs/Storage';
 import EventBus from '@/libs/EventBus';
@@ -43,7 +43,7 @@ export default {
     };
   },
   mounted () {
-    this.isTabs = !isEmpty(getStorage(CACHE_TABS_GROUP));
+    this.isTabs = !isEmpty(getStorage(CACHE_TABS_GROUP)) || !isEmpty(getStorage(COLLECT_TABS));
     EventBus.$on('refresh', () => {
       this.isTabs = !isEmpty(getStorage(CACHE_TABS_GROUP));
       this.init(true);
