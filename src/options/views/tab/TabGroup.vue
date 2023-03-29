@@ -16,14 +16,15 @@
         </div>
       </div>
       <div :class="['otp-tab-item',activeIndex===index?'otp-tab-item-active':'']" v-for="(item,index) in tabGroups"
-           :key="index" @click="changeTabItem(item,index)">
+           @drop="placeTab($event,item,index)" @dragover="onDragover" @dragleave="onDragleave(index)"
+           draggable="true" :key="index"
+           @click="changeTabItem(item,index)">
         <div :class="['otp-tab-item-line ',tabGroups.length-1!==index?'otp-tab-item-line-ac':'']">
           <span :class="[activeIndex===index?'otp-tab-item-dot-active':'']"></span>
         </div>
-        <div class="otp-tab-item-info">
-          <div>
-            <span v-if="item.tabGroupName">{{ item.tabGroupName }}</span>
-            <span v-else>未命名标签组</span>
+        <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']">
+          <div class="otp-tab-item-info-input">
+            <input v-model="item.tabGroupName" placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
           <div class="otp-tab-item-tag" v-if="item.lock">已锁定</div>
           <p>
@@ -38,7 +39,7 @@
 <script>
 
 import { CACHE_TABS_GROUP, COLLECT_TABS, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
-import { getCollectTabs, getTabsApi, saveTabsApi } from '../../../api/OtherApi';
+import { getCollectTabs, getTabsApi, modifyGroupName, saveTabsApi } from '../../../api/OtherApi';
 import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 
@@ -46,6 +47,8 @@ export default {
   name: 'TabGroup',
   data () {
     return {
+      currentDragstartTab: null,
+      placeIndex: null,
       activeIndex: 0,
       tabGroups: [],
       collectTabs: { val: [] }
@@ -88,6 +91,45 @@ export default {
     changeTabItem (item, index) {
       this.activeIndex = index;
       this.$emit('change', item, index);
+    },
+
+    /**
+     * 拖拽时进入可放置区域
+     */
+    placeTab (event, item, index) {
+      event.preventDefault();
+      if (index === this.activeIndex) {
+        return;
+      }
+      let dragGroup = this.tabGroups[index];
+      let newtab = Object.assign({}, this.currentDragstartTab);
+      newtab.id = new Date().getTime();
+      dragGroup.val.push(newtab);
+      setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
+      if (isAuthorization()) {
+        saveTabsApi([newtab]).then((res) => {
+          setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
+        });
+      }
+      this.onDragleave(null);
+      eventBus.$emit('deleteDragstartTab');
+    },
+    onDragleave (index) {
+      this.placeIndex = index;
+    },
+    onDragover (e) {
+      e.preventDefault();
+      this.onDragleave(null);
+    },
+    /**
+     * 修改标签组名称
+     * @param e
+     */
+    updateGroupName (e) {
+      if (isAuthorization()) {
+        modifyGroupName(this.tabGroupItem.tabGroup, this.tabGroupItem.tabGroupName);
+      }
+      setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     },
 
     /**
@@ -168,6 +210,16 @@ export default {
         tabGroups.splice(0, 0, collectTabs);
       }
       exportHtml(tabGroups);
+    },
+    createGroup () {
+      let createTime = new Date();
+      this.tabGroups.splice(0, 0, {
+        tabGroup: createTime.getTime(),
+        tabGroupName: null,
+        time: dateFormatStr(createTime),
+        val: []
+      });
+      setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     }
   },
   mounted () {
@@ -202,6 +254,10 @@ export default {
     eventBus.$on('init_tab_data', this.initTabs);
     eventBus.$on('onUpTab', this.onUpTab);
     eventBus.$on('saveTabs', this.saveTabs);
+    eventBus.$on('dragstartTab', (tab) => {
+      this.currentDragstartTab = tab;
+    });
+    eventBus.$on('createGroup', this.createGroup);
   }
 };
 </script>
@@ -285,6 +341,16 @@ export default {
         padding-top: 2px;
         flex: 12;
         margin-bottom: 10px;
+        overflow: hidden;
+        padding-left: 4px;
+
+        .otp-tab-item-info-input {
+          > input {
+            border: none;
+            outline: none;
+            background: #ff000000;
+          }
+        }
 
         .otp-tab-item-tag {
           height: 10px;
@@ -300,6 +366,11 @@ export default {
           font-weight: bold;
         }
       }
+
+      .otp-tab-item-active-place {
+        background: #c8c8c86e;
+        border-radius: 8px;
+      }
     }
 
     .otp-collect {
@@ -310,8 +381,21 @@ export default {
       justify-content: center;
     }
 
+    //
+    //.otp-create-group {
+    //  margin-bottom: 16px;
+    //  padding: 10px 0;
+    //  border: 1px dashed #c8c8c8;
+    //  border-radius: 10px;
+    //  justify-content: center;
+    //}
+
     .otp-tab-item-active {
       color: #66b1ff;
+
+      input {
+        color: #66b1ff;
+      }
     }
 
     .otp-tab-item-dot-active {

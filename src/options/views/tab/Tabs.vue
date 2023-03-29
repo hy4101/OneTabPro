@@ -11,6 +11,9 @@
           </template>
           <template v-else>
             <div style="display: flex;">
+              <el-tooltip effect="dark" content="创建分组" placement="top-start">
+                <i class="el-icon-circle-plus obp-opts-icon" @click="toolbarBtn(20)"></i>
+              </el-tooltip>
               <el-tooltip effect="dark" content="设置" placement="top-start">
                 <i class="el-icon-s-tools obp-opts-icon" @click="toolbarBtn(10)"></i>
               </el-tooltip>
@@ -25,10 +28,6 @@
             <div style="margin-left: 10px">
               创建于： {{ tabGroupItem.time }}，包含{{ tabGroupItem.val.length }}个标签页
             </div>
-            <div class="otp-group-name">
-              <input v-model="tabGroupItem.tabGroupName" maxlength="20" @blur="endInputName"
-                     placeholder="请修改标签组名称 / 20字"/>
-            </div>
           </template>
         </div>
         <div style="overflow-y: auto; width: 100%;height: 100%;margin-top: 48px;padding-bottom: 100px;">
@@ -41,11 +40,14 @@
                 <i @click="iconBtn(site)" v-if="tabGroup.tabGroup!=='collect_id'" style="cursor: pointer">
                   <collect></collect>
                 </i>
-                <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
-                     :src="site.favIconUrl">
-                <i v-else class="el-icon-link  fsb-sl-image" style="color:black;margin-right: 6px"></i>
-                <div @click="onSite(site,index)" class="fsb-sl-info">
-                  {{ site.title }}
+                <div class="ftb-tabs-item-info" @dragend="dragendTab" @dragover="e=>e.preventDefault()"
+                     @dragstart="dragstartTab(site,index)" draggable="true">
+                  <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
+                       :src="site.favIconUrl">
+                  <i v-else class="el-icon-link  fsb-sl-image" style="color:black;margin-right: 6px"></i>
+                  <div @click="onSite(site,index)" class="fsb-sl-info">
+                    {{ site.title }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -60,8 +62,8 @@
 <script>
 
 import { getStorage, isAuthorization } from '../../../libs/Storage';
-import { isEmpty, openSite, toast } from '../../../libs/util';
-import { collectApi, deleteApi, deleteTabGroupApi, lockTab, modifyGroupName } from '../../../api/OtherApi.js';
+import { openSite, toast } from '../../../libs/util';
+import { collectApi, deleteApi, deleteTabGroupApi, lockTab } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
 import Collect from '../../components/icon/Collect.vue';
 import SettingDialog from './SettingDialog.vue';
@@ -88,6 +90,8 @@ export default {
   },
   data () {
     return {
+      currentDratIndex: null,
+      currentDratItem: null,
       isShowSettingDialog: false,
       tabGroupItem: { time: null, val: [] }
     };
@@ -104,10 +108,10 @@ export default {
      * @param item
      * @param index
      */
-    deleteItem (item, index) {
+    deleteItem (item, index, message = '删除成功') {
       this.tabGroupItem.val.splice(index, 1);
       EventBus.$emit('updateTabItem', this.tabGroupItem);
-      toast('删除成功');
+      toast(message);
       if (isAuthorization()) {
         deleteApi(item.id);
       }
@@ -125,19 +129,18 @@ export default {
     iconBtn (item) {
       collectApi(item);
     },
-
+    dragendTab () {
+      setTimeout(() => {
+        EventBus.$emit('dragstartTab', null);
+      }, 100);
+    },
     /**
-     * 结束输入名称
-     * @param v
+     * 开始拖拽
      */
-    endInputName (v) {
-      if (isEmpty(this.tabGroupItem.tabGroupName)) {
-        return;
-      }
-      EventBus.$emit('updateTabItem', this.tabGroupItem);
-      if (isAuthorization()) {
-        modifyGroupName(this.tabGroupItem.tabGroup, this.tabGroupItem.tabGroupName);
-      }
+    dragstartTab (site, index) {
+      this.currentDratIndex = index;
+      this.currentDratItem = site;
+      EventBus.$emit('dragstartTab', site);
     },
 
     /**
@@ -173,6 +176,9 @@ export default {
       if (10 === type) {
         this.isShowSettingDialog = true;
       }
+      if (20 === type) {
+        EventBus.$emit('createGroup');
+      }
     },
     onClose () {
       this.isShowSettingDialog = false;
@@ -183,7 +189,16 @@ export default {
         deleteTabGroupApi(this.tabGroupItem.tabGroup);
       }
       toast('标签组已删除');
+    },
+    /**
+     * 拖拽成功后，删除被拖拽的数据
+     */
+    deleteDragstartTab () {
+      this.deleteItem(this.currentDratItem, this.currentDratIndex, '移动成功');
     }
+  },
+  mounted () {
+    EventBus.$on('deleteDragstartTab', this.deleteDragstartTab);
   }
 };
 </script>
@@ -266,6 +281,10 @@ export default {
         width: 100%;
         display: flex;
         margin-top: 4px;
+
+        .ftb-tabs-item-info {
+          display: flex;
+        }
       }
 
       .ftb-tabs-item:hover .ios-trash {
