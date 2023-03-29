@@ -23,7 +23,7 @@
 import { setStorage, getStorage } from '../../../libs/Storage';
 import { isEmpty, parseXmlString, toast } from '../../../libs/util';
 import EventBus from '../../../libs/EventBus';
-import { collectApi } from '../../../api/OtherApi';
+import { collectApi, collectImportApi } from '../../../api/OtherApi';
 
 export default {
   name: 'SettingDialog',
@@ -55,31 +55,42 @@ export default {
         if (fileContent.indexOf('one-tab-pro-group-item') < 0) {
           return toast('文件格式错误（只允许导出后的文件格式）', 'error');
         }
-        console.log(fileContent);
         let dom = parseXmlString(fileContent);
         let groupDom = dom.getElementsByClassName('one-tab-pro-group-item');
         let groupData = [];
+        let collectTabs = [];
         for (let i = 0; i < groupDom.length; i++) {
           let baseTime = new Date().getTime();
           ++baseTime;
           let groupElement = groupDom[i];
-          let groupName = groupElement.getElementsByClassName('one-tab-pro-group-item-title')[0].childNodes[1].innerText;
+          let groups = groupElement.getElementsByClassName('one-tab-pro-group-item-title')[0].childNodes[1].innerText;
+          let tabGroupName = groups.replace(/\s/g, '').split('-');
           let siteDom = groupElement.getElementsByClassName('one-tab-pro-a-item');
           let res = [];
           for (let siteDomElement of siteDom) {
             let image = siteDomElement.children[0].src;
             let path = siteDomElement.children[1].href;
             let title = siteDomElement.children[1].innerText;
-            res.push({ url: path, path: path, favIconUrl: image, title: title, id: ++baseTime });
+            let tabItem = {
+              url: path,
+              path: path,
+              favIconUrl: image,
+              title: title,
+              id: ++baseTime,
+              index: i,
+              tabGroup: baseTime,
+              tabGroupName: tabGroupName[0]
+            };
+            tabItem.tabGroupName = tabGroupName[0];
+            res.push(tabItem);
           }
-          if (i === 0 && groupName.indexOf('我的收藏') >= 0) {
+          if (i === 0 && groups.indexOf('我的收藏') >= 0) {
             for (let item of res) {
-              collectApi(item);
+              collectTabs.push(item);
             }
             continue;
           }
-          let time = groupName.split('个标签页 ')[1].replace(/\n/g, '');
-          groupName = groupName.replace(/\s/g, '').split('-');
+          let time = groups.split('个标签页 ')[1].replace(/\n/g, '');
           let sites = res.filter(s => !s.path.startsWith('chrome://newtab/') && !s.path.startsWith('chrome-extension://'));
           if (isEmpty(sites)) {
             continue;
@@ -90,15 +101,19 @@ export default {
             tabGroup: new Date().getTime() + i,
             lock: false,
             val: sites,
-            tabGroupName: groupName[0]
+            tabGroupName: tabGroupName[0]
           };
           groupData.push(groupItem);
+        }
+        if (!isEmpty(collectTabs)) {
+          collectImportApi(collectTabs);
         }
         for (let reverseElement of groupData.reverse()) {
           EventBus.$emit('saveTabs', reverseElement);
         }
         toast('导入成功');
         this.$refs.fileInput.value = null;
+        this.closeDialog();
       };
     },
     settingOpenDeleteSite () {

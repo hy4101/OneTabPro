@@ -72,8 +72,10 @@ export const modifyGroupName = (group, name) => {
 
 /**
  * 收藏标签
+ *
  * @returns {AxiosPromise<any>}
  * @param tab
+ * @param type
  */
 export const collectApi = (tab) => {
   if (isAuthorization()) {
@@ -86,6 +88,28 @@ export const collectApi = (tab) => {
     newTab.sourceId = sourceId;
     newTab.id = new Date().getTime() + '';
     addCollectTab(newTab, sourceId);
+  }
+};
+
+/**
+ * 导入收藏的标签
+ * @param tabs
+ */
+export const collectImportApi = (tabs) => {
+  if (isAuthorization()) {
+    axios.post(USER_URL + 'collect-tab/import', tabs).then(res => {
+      for (let i = 0; i < res.data.data.length; i++) {
+        addCollectTab(res.data.data[i], res.data.data[i].id);
+      }
+    });
+  } else {
+    for (let tab of tabs) {
+      let sourceId = tab.id;
+      let newTab = Object.assign({}, tab);
+      newTab.sourceId = sourceId;
+      newTab.id = new Date().getTime() + '';
+      addCollectTab(newTab, sourceId);
+    }
   }
 };
 

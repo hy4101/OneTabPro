@@ -31,16 +31,16 @@ export default {
         type: res.type
       });
     });
-
-    chrome.runtime.onMessage.addListener(() => {
-      chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      }, (tabs) => {
-      });
-      setStorage('is_up_tab', 1);
-      chrome.runtime.openOptionsPage();
-    });
+    //
+    // chrome.runtime.onMessage.addListener(() => {
+    //   chrome.tabs.query({
+    //     active: true,
+    //     currentWindow: true
+    //   }, (tabs) => {
+    //   });
+    //   setStorage('is_up_tab', 1);
+    //   chrome.runtime.openOptionsPage();
+    // });
   }
 };
 </script>

@@ -106,6 +106,7 @@ export default {
         getCollectTabs().then(res => {
           let _res = res.data.data;
           if (isEmpty(_res)) {
+            removeItem(COLLECT_TABS);
             return;
           }
           setStorage(COLLECT_TABS, JSON.stringify(_res));

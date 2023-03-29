@@ -93,7 +93,7 @@ export const getExplorerInfo = () => {
  * 获取浏览器的标签
  */
 export const getTabs = (callback) => {
-  chrome.tabs.query({}, (res) => {
+  chrome.tabs.query({ currentWindow: true }, (res) => {
     let _target = [...res];
     res.forEach((needSaveTab, v) => {
       if (needSaveTab.active) {
