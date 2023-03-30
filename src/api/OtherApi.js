@@ -98,9 +98,7 @@ export const collectApi = (tab) => {
 export const collectImportApi = (tabs) => {
   if (isAuthorization()) {
     axios.post(USER_URL + 'collect-tab/import', tabs).then(res => {
-      for (let i = 0; i < res.data.data.length; i++) {
-        addCollectTab(res.data.data[i], res.data.data[i].id);
-      }
+      EventBus.$emit('initCollectTabData');
     });
   } else {
     for (let tab of tabs) {

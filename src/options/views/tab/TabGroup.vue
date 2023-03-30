@@ -169,15 +169,7 @@ export default {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(_res));
           this.setTabGroup(_res, isChange);
         });
-        getCollectTabs().then(res => {
-          let _res = res.data.data;
-          if (isEmpty(_res)) {
-            removeItem(COLLECT_TABS);
-            return;
-          }
-          setStorage(COLLECT_TABS, JSON.stringify(_res));
-          this.collectTabs = { tabGroup: 'collect_id', val: _res };
-        });
+        this.getCollectTabData();
       } else {
         let temp = getStorage(CACHE_TABS_GROUP);
         if (!isEmpty(temp)) {
@@ -191,7 +183,17 @@ export default {
         }
       }
     },
-
+    getCollectTabData () {
+      getCollectTabs().then(res => {
+        let _res = res.data.data;
+        if (isEmpty(_res)) {
+          removeItem(COLLECT_TABS);
+          return;
+        }
+        setStorage(COLLECT_TABS, JSON.stringify(_res));
+        this.collectTabs = { tabGroup: 'collect_id', val: _res };
+      });
+    },
     /**
      * 设置标签组的值
      * @param _res
@@ -285,6 +287,7 @@ export default {
       this.placeIndex = null;
     });
     eventBus.$on('createGroup', this.createGroup);
+    eventBus.$on('initCollectTabData', this.getCollectTabData);
   }
 };
 </script>
