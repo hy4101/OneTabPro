@@ -14,6 +14,9 @@
           <label>导入：</label>
           <input type="file" ref="fileInput" @change="onChange">
         </div>
+
+        <a href="https://www.miniits.com/note/open?id=1680169521620" target="_blank"
+           style="margin-top: 20px">使用教程</a>
       </div>
     </el-dialog>
   </div>

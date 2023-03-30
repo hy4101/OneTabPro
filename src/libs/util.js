@@ -139,3 +139,40 @@ export const parseXmlString = (xmlString) => {
   const parser = new DOMParser();
   return parser.parseFromString(xmlString, 'text/html');
 };
+
+/**
+ * 防抖 当事件被触发后，等待一段时间再执行事件处理程序，如果在等待时间内事件再次被触发，则重新计时
+ * @param callback
+ * @param wait
+ * @returns {(function(): void)|*}
+ */
+export const debounce = (callback, wait) => {
+  let timeout;
+  return function () {
+    let context = this;
+    let args = arguments;
+    clearTimeout(timeout);
+    timeout = setTimeout(function () {
+      callback.apply(context, args);
+    }, wait);
+  };
+};
+
+/**
+ * 节流：当事件被触发后，在一段时间内只执行一次事件处理程序。这种技术可以用于限制频繁触发的事件，例如滚动事件或鼠标移动事件
+ * @param callback
+ * @param delay
+ * @returns {(function(): void)|*}
+ */
+export const throttle = (callback, delay) => {
+  let prev = Date.now();
+  return function () {
+    let context = this;
+    let args = arguments;
+    let now = Date.now();
+    if (now - prev >= delay) {
+      callback.apply(context, args);
+      prev = Date.now();
+    }
+  };
+};

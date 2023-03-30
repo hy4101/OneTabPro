@@ -1,5 +1,5 @@
 <template>
-  <!--  精选网站-->
+  <!--  标签页列表 -->
   <div class="free-tabs">
     <div class="ft-body">
       <div class="ftb-tabs-list">
@@ -44,7 +44,8 @@
                      @dragstart="dragstartTab(site,index)" draggable="true">
                   <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
                        :src="site.favIconUrl">
-                  <i v-else class="el-icon-link  fsb-sl-image" style="color:black;margin-right: 6px"></i>
+                  <i v-else class="el-icon-link  fsb-sl-image"
+                     style="color:black;margin-right: 6px;font-size: 16px"></i>
                   <div @click="onSite(site,index)" class="fsb-sl-info">
                     {{ site.title }}
                   </div>
@@ -130,6 +131,8 @@ export default {
       collectApi(item);
     },
     dragendTab () {
+      console.log(1);
+      EventBus.$emit('tab_drop');
       setTimeout(() => {
         EventBus.$emit('dragstartTab', null);
       }, 100);
@@ -143,6 +146,9 @@ export default {
       EventBus.$emit('dragstartTab', site);
     },
 
+    placeTabqq () {
+      EventBus.$emit('tab_drop');
+    },
     /**
      * type = 0 打开所有
      * type = 1 删除

@@ -16,13 +16,14 @@
         </div>
       </div>
       <div :class="['otp-tab-item',activeIndex===index?'otp-tab-item-active':'']" v-for="(item,index) in tabGroups"
-           @drop="placeTab($event,item,index)" @dragover="onDragover" @dragleave="onDragleave(index)"
-           draggable="true" :key="index"
+           :key="index"
            @click="changeTabItem(item,index)">
         <div :class="['otp-tab-item-line ',tabGroups.length-1!==index?'otp-tab-item-line-ac':'']">
           <span :class="[activeIndex===index?'otp-tab-item-dot-active':'']"></span>
         </div>
-        <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']">
+        <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']"
+             @drop="placeTab($event,item,index)" @dragleave="onDragleave($event,index)"
+             @dragover="onDragover($event,index)" draggable="true">
           <div class="otp-tab-item-info-input">
             <input v-model="item.tabGroupName" placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
@@ -30,6 +31,7 @@
           <p>
             {{ item.val.length }}个标签页 {{ item.time }}
           </p>
+          <!--          <div class="otp-tab-group-drag-voer"></div>-->
         </div>
       </div>
     </div>
@@ -40,7 +42,7 @@
 
 import { CACHE_TABS_GROUP, COLLECT_TABS, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
 import { getCollectTabs, getTabsApi, modifyGroupName, saveTabsApi } from '../../../api/OtherApi';
-import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
+import { dateFormatStr, getTabs, isEmpty, exportHtml, debounce } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 
 export default {
@@ -113,13 +115,35 @@ export default {
       }
       this.onDragleave(null);
       eventBus.$emit('deleteDragstartTab');
+      // setTimeout(() => {
+      this.placeIndex = null;
+      // }, 100);
     },
-    onDragleave (index) {
+    onDragleave ($event, index) {
+      // const container = $event.target;
+      // const target = $event.relatedTarget;
+      //
+      // if (!container.contains(target)) {
+      //   // 拖动元素已经离开容器
+      //   // 在此处执行您的代码
+      // console.log('离开', this.placeIndex, index);
+      // if (this.placeIndex === index) {
+      //   return;
+      // }
+      // console.log('离开', index);
+      // this.placeIndex = null;
+      // }
+      // debounce(this.setDragleave, 1000);
+      // console.log('离开');
+      // this.placeIndex = null;
+    },
+    // setDragleave (index) {
+    //   console.log('离开:', index);
+    // },
+    onDragover ($event, index) {
+      console.log('进入');
+      $event.preventDefault();
       this.placeIndex = index;
-    },
-    onDragover (e) {
-      e.preventDefault();
-      this.onDragleave(null);
     },
     /**
      * 修改标签组名称
@@ -257,6 +281,9 @@ export default {
     eventBus.$on('dragstartTab', (tab) => {
       this.currentDragstartTab = tab;
     });
+    eventBus.$on('tab_drop', (tab) => {
+      this.placeIndex = null;
+    });
     eventBus.$on('createGroup', this.createGroup);
   }
 };
@@ -343,6 +370,7 @@ export default {
         margin-bottom: 10px;
         overflow: hidden;
         padding-left: 4px;
+        position: relative;
 
         .otp-tab-item-info-input {
           > input {
@@ -360,6 +388,15 @@ export default {
           font-size: 12px;
           color: #409eff;
           margin-top: 6px;
+        }
+
+        .otp-tab-group-drag-voer {
+          background: #0bbd87;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
         }
 
         span {
