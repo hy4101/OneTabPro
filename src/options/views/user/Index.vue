@@ -25,6 +25,23 @@
       <img v-for="(item,index) in emojis" :src="item" @click="settingUserAvatar('128',index)" :key="item"/>
       <img v-for="(item,index) in avatars" :src="item" @click="settingUserAvatar('avatars',index)" :key="item"/>
     </div>
+    <div class="i-scroll-pay">
+      <h4>此时无声胜有声（打赏作者）</h4>
+      <div>
+        <div class="i-scroll-pay-image">
+          <img src="https://image.miniits.com/pay/alipay.png"/>
+          <span>支付宝</span>
+        </div>
+        <div class="i-scroll-pay-image">
+          <img src="https://image.miniits.com/pay/wechat_pay.png"/>
+          <span>微信</span>
+        </div>
+        <div class="i-scroll-wechat-image">
+          <img src="https://image.miniits.com/miniits_mp_browser_desktop.png"/>
+          <span>公众号</span>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -134,6 +151,43 @@ export default {
       width: 50px;
       margin: 10px;
       cursor: pointer;
+    }
+  }
+
+  .i-scroll-pay {
+    margin-top: 20px;
+
+    h4 {
+      text-align: left;
+      margin-left: 10px;
+    }
+
+    .i-scroll-pay-image {
+      display: flex;
+      flex-direction: column;
+
+      > img {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .i-scroll-wechat-image {
+      display: flex;
+      flex-direction: column;
+
+      > img {
+        width: 300px;
+      }
+    }
+
+    img {
+      margin: 0 10px;
+    }
+
+    > div {
+      display: flex;
+      width: 100%;
     }
   }
 }
