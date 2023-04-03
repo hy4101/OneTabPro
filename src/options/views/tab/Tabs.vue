@@ -63,7 +63,7 @@
 <script>
 
 import { getStorage, isAuthorization } from '../../../libs/Storage';
-import { openSite, toast } from '../../../libs/util';
+import { isEmpty, openSite, toast } from '../../../libs/util';
 import { collectApi, deleteApi, deleteTabGroupApi, lockTab } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
 import Collect from '../../components/icon/Collect.vue';
@@ -99,6 +99,11 @@ export default {
   },
   watch: {
     tabGroup (v) {
+      if (!isEmpty(v.val)) {
+        v.val.sort((a, b) => {
+          return a.createDate > b.createDate ? -1 : 1;
+        });
+      }
       this.tabGroupItem = v;
     }
   },

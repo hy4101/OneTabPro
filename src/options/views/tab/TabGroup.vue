@@ -23,7 +23,7 @@
         </div>
         <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']"
              @drop="placeTab($event,item,index)" @dragleave="onDragleave($event,index)"
-             @dragover="onDragover($event,index)" draggable="true">
+             @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
             <input v-model="item.tabGroupName" placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
@@ -106,7 +106,10 @@ export default {
       let dragGroup = this.tabGroups[index];
       let newtab = Object.assign({}, this.currentDragstartTab);
       newtab.id = new Date().getTime();
-      dragGroup.val.push(newtab);
+      dragGroup.val.splice(0, 0, newtab);
+      console.log(dragGroup);
+      newtab.createDate = new Date().getTime();
+      newtab.tabGroup = dragGroup.tabGroup;
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       if (isAuthorization()) {
         saveTabsApi([newtab]).then((res) => {
@@ -115,9 +118,7 @@ export default {
       }
       this.onDragleave(null);
       eventBus.$emit('deleteDragstartTab');
-      // setTimeout(() => {
       this.placeIndex = null;
-      // }, 100);
     },
     onDragleave ($event, index) {
       // const container = $event.target;
