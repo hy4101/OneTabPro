@@ -152,7 +152,8 @@ export default {
      */
     updateGroupName (e) {
       if (isAuthorization()) {
-        modifyGroupName(this.tabGroupItem.tabGroup, this.tabGroupItem.tabGroupName);
+        let item = this.tabGroups[this.activeIndex];
+        modifyGroupName(item.tabGroup, item.tabGroupName);
       }
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     },
