@@ -1,0 +1,55 @@
+{
+  "name": "options-code",
+  "version": "2.0.0",
+  "author": "wq<wq@163.com>",
+  "private": false,
+  "scripts": {
+    "dev-onetabpro-mobile": "vue-cli-service serve --open",
+    "build-onetabpro-mobile": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit",
+    "test:e2e": "vue-cli-service test:e2e"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "js-md5": "^0.7.3",
+    "view-design": "^4.7.0",
+    "vue": "^2.5.10",
+    "vue-codemirror": "^4.0.6",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-plugin-unit-mocha": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
+    "@vue/composition-api": "^1.6.2",
+    "@vue/eslint-config-standard": "^3.0.0-beta.10",
+    "@vue/test-utils": "^1.0.0-beta.10",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
+    "babel-plugin-import": "^1.13.0",
+    "compression-webpack-plugin": "^6.1.1",
+    "eslint-plugin-cypress": "^2.0.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "lint-staged": "^6.0.0",
+    "vue-template-compiler": "^2.5.13",
+    "vue-waterfall-easy": "^2.4.4"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}
