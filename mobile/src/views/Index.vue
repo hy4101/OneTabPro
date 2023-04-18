@@ -15,5 +15,6 @@ export default {
   max-width: 750px;
   margin: auto;
   height: 100vh;
+  background: red;
 }
 </style>
