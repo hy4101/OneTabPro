@@ -33,7 +33,9 @@
         <div style="overflow-y: auto; width: 100%;height: 100%;margin-top: 48px;padding-bottom: 100px;">
           <template v-if="tabGroupItem.val!==null&&tabGroupItem.val.length>0">
             <div class="ftb-tabs-item" v-for="(site,index) in tabGroupItem.val" :key="site.id">
-              <div style="position: relative">
+              <div v-if="site.dragStatus" class="active-item-drop"></div>
+              <div v-else style="position: relative"
+                   @drop="placeTab($event,site,index)" @dragover="onDragover($event,index)">
                 <i class="el-icon-delete" style="color:black;margin-right: 6px;cursor: pointer"
                    v-if="activeGroupIndex>=-1"
                    @click="deleteItem(site,index)"></i>
@@ -41,7 +43,7 @@
                   <collect></collect>
                 </i>
                 <div class="ftb-tabs-item-info" @dragend="dragendTab" @dragover="e=>e.preventDefault()"
-                     @dragstart="dragstartTab(site,index)" draggable="true">
+                     @dragstart="dragstartTab($event,site,index)" draggable="true">
                   <img class="fsb-sl-image" v-if="site.favIconUrl!=null"
                        :src="site.favIconUrl">
                   <i v-else class="el-icon-link  fsb-sl-image"
@@ -62,12 +64,13 @@
 
 <script>
 
-import { getStorage, isAuthorization } from '../../../libs/Storage';
+import { CACHE_TABS_GROUP, getStorage, isAuthorization, setStorage } from '../../../libs/Storage';
 import { isEmpty, openSite, toast } from '../../../libs/util';
-import { collectApi, deleteApi, deleteTabGroupApi, lockTab } from '../../../api/OtherApi.js';
+import { collectApi, deleteApi, deleteTabGroupApi, lockTab, saveTabsApi } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
 import Collect from '../../components/icon/Collect.vue';
 import SettingDialog from './SettingDialog.vue';
+import eventBus from '../../../libs/EventBus';
 
 export default {
   name: 'tabs',
@@ -91,6 +94,7 @@ export default {
   },
   data () {
     return {
+      placeItemIndex: null,
       currentDratIndex: null,
       currentDratItem: null,
       isShowSettingDialog: false,
@@ -108,11 +112,26 @@ export default {
     }
   },
   methods: {
-
+    onDragover ($event, index) {
+      console.log('进入');
+      $event.preventDefault();
+      this.placeItemIndex = index;
+      let temp = this.tabGroupItem.val;
+      temp = temp.filter((t) => isEmpty(t.dragStatus));
+      temp.splice(index, 0, { dragStatus: true });
+      this.tabGroupItem.val = temp;
+    },
+    /**
+     * 拖拽时进入可放置区域
+     */
+    placeTab (event, item, index) {
+      event.preventDefault();
+    },
     /**
      * 删除单个数据
      * @param item
      * @param index
+     * @param message
      */
     deleteItem (item, index, message = '删除成功') {
       this.tabGroupItem.val.splice(index, 1);
@@ -136,7 +155,6 @@ export default {
       collectApi(item);
     },
     dragendTab () {
-      console.log(1);
       EventBus.$emit('tab_drop');
       setTimeout(() => {
         EventBus.$emit('dragstartTab', null);
@@ -145,14 +163,10 @@ export default {
     /**
      * 开始拖拽
      */
-    dragstartTab (site, index) {
+    dragstartTab (e, site, index) {
       this.currentDratIndex = index;
       this.currentDratItem = site;
       EventBus.$emit('dragstartTab', site);
-    },
-
-    placeTabqq () {
-      EventBus.$emit('tab_drop');
     },
     /**
      * type = 0 打开所有
@@ -295,6 +309,12 @@ export default {
 
         .ftb-tabs-item-info {
           display: flex;
+        }
+
+        .active-item-drop {
+          border: 1px dashed #c8c8c8;
+          height: 24px;
+          width: 165px;
         }
       }
 

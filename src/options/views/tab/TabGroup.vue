@@ -22,8 +22,7 @@
           <span :class="[activeIndex===index?'otp-tab-item-dot-active':'']"></span>
         </div>
         <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']"
-             @drop="placeTab($event,item,index)" @dragleave="onDragleave($event,index)"
-             @dragover="onDragover($event,index)">
+             @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
             <input v-model="item.tabGroupName" placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
@@ -107,7 +106,6 @@ export default {
       let newtab = Object.assign({}, this.currentDragstartTab);
       newtab.id = new Date().getTime();
       dragGroup.val.splice(0, 0, newtab);
-      console.log(dragGroup);
       newtab.createDate = new Date().getTime();
       newtab.tabGroup = dragGroup.tabGroup;
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
@@ -116,31 +114,9 @@ export default {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
         });
       }
-      this.onDragleave(null);
       eventBus.$emit('deleteDragstartTab');
       this.placeIndex = null;
     },
-    onDragleave ($event, index) {
-      // const container = $event.target;
-      // const target = $event.relatedTarget;
-      //
-      // if (!container.contains(target)) {
-      //   // 拖动元素已经离开容器
-      //   // 在此处执行您的代码
-      // console.log('离开', this.placeIndex, index);
-      // if (this.placeIndex === index) {
-      //   return;
-      // }
-      // console.log('离开', index);
-      // this.placeIndex = null;
-      // }
-      // debounce(this.setDragleave, 1000);
-      // console.log('离开');
-      // this.placeIndex = null;
-    },
-    // setDragleave (index) {
-    //   console.log('离开:', index);
-    // },
     onDragover ($event, index) {
       console.log('进入');
       $event.preventDefault();
