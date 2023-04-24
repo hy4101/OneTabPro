@@ -27,7 +27,7 @@
                    placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
           <div class="otp-group-footer">
-            <div style="flex: 1">
+            <div>
               <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.val.length }}</i>
               <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.time) }}</i>
             </div>
