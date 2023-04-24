@@ -9,10 +9,7 @@
            v-if="collectTabs.val.length>0"
            @click="changeTabItem(collectTabs,-1)">
         <div style="font-weight: bold">
-          我的收藏
-        </div>
-        <div style="font-size: 12px;margin-left: 10px">
-          {{ collectTabs.val.length }}个标签页
+          我的收藏<span>({{ collectTabs.val.length }})</span>
         </div>
       </div>
       <div :class="['otp-tab-item',activeIndex===index?'otp-tab-item-active':'']" v-for="(item,index) in tabGroups"
@@ -24,13 +21,11 @@
         <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']"
              @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
-            <input v-model="item.tabGroupName" placeholder="未命名标签组" @input="updateGroupName"/>
+            <div>({{ item.val.length }})</div>
+            <input v-model="item.tabGroupName"
+                   :style="{'width':item.tabGroupName.length>0?(item.tabGroupName.length*12+10)+'px':'90px'}"
+                   placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
-          <div class="otp-tab-item-tag" v-if="item.lock">已锁定</div>
-          <p>
-            {{ item.val.length }}个标签页 {{ item.time }}
-          </p>
-          <!--          <div class="otp-tab-group-drag-voer"></div>-->
         </div>
       </div>
     </div>
@@ -41,7 +36,7 @@
 
 import { CACHE_TABS_GROUP, COLLECT_TABS, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
 import { getCollectTabs, getTabsApi, modifyGroupName, saveTabsApi } from '../../../api/OtherApi';
-import { dateFormatStr, getTabs, isEmpty, exportHtml, debounce } from '../../../libs/util.js';
+import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 
 export default {
@@ -118,7 +113,6 @@ export default {
       this.placeIndex = null;
     },
     onDragover ($event, index) {
-      console.log('进入');
       $event.preventDefault();
       this.placeIndex = index;
     },
@@ -182,6 +176,11 @@ export default {
       if (!isEmpty(collectTabs)) {
         this.collectTabs = { tabGroup: 'collect_id', val: JSON.parse(collectTabs) };
       }
+      for (let re of _res) {
+        if (isEmpty(re.tabGroupName)) {
+          re.tabGroupName = '未命名标签组';
+        }
+      }
       this.tabGroups = _res;
       if (isChange) {
         this.changeTabItem(this.tabGroups[0], 0);
@@ -219,7 +218,7 @@ export default {
       let createTime = new Date();
       this.tabGroups.splice(0, 0, {
         tabGroup: createTime.getTime(),
-        tabGroupName: null,
+        tabGroupName: '未命名标签组',
         time: dateFormatStr(createTime),
         val: []
       });
@@ -314,50 +313,51 @@ export default {
     flex-direction: column;
     max-width: 350px;
     overflow-y: auto;
-    padding-left: 24px;
-    margin-right: 12px;
+    //padding-left: 24px;
+    //margin-right: 12px;
+
+    .otp-tab-item:hover:not(:first-child) {
+      background: #1296db;
+
+      input, div {
+        color: #fff;
+      }
+    }
 
     .otp-tab-item {
       display: flex;
       cursor: pointer;
-
-      .otp-tab-item-line {
-        position: relative;
-        width: 20px;
-        flex: 1;
-
-        span {
-          position: absolute;
-          top: 0;
-          left: -11px;
-          width: 20px;
-          height: 20px;
-          background: #E4E7ED;
-          border-radius: 20px;
-        }
-      }
-
-      .otp-tab-item-line-ac {
-        border-left: 2px solid #E4E7ED;
-      }
+      align-items: center;
+      padding: 0 20px;
 
       .otp-tab-item-info {
         display: flex;
         flex-direction: column;
         align-content: flex-start;
         align-items: self-start;
-        padding-top: 2px;
+        //padding-top: 2px;
         flex: 12;
-        margin-bottom: 10px;
+        //margin-bottom: 10px;
         overflow: hidden;
-        padding-left: 4px;
+        //padding-left: 4px;
         position: relative;
 
         .otp-tab-item-info-input {
+          height: 38px;
+          display: flex;
+          align-items: center;
+
           > input {
             border: none;
             outline: none;
             background: #ff000000;
+          }
+
+          > div {
+            font-size: 12px;
+            color: #8d8989;
+            width: 35px;
+            text-align: right;
           }
         }
 
@@ -392,11 +392,12 @@ export default {
     }
 
     .otp-collect {
-      margin-bottom: 16px;
       padding: 10px 0;
       border: 1px solid #c8c8c8;
       border-radius: 10px;
       justify-content: center;
+      width: 80%;
+      margin: 5px auto;
     }
 
     //

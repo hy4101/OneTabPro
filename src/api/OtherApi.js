@@ -71,6 +71,15 @@ export const modifyGroupName = (group, name) => {
 };
 
 /**
+ * 设置排序
+ * @param tabs
+ * @returns {AxiosPromise<any>}
+ */
+export const setTabSort = (tabs) => {
+  return axios.post(USER_URL + 'set-tab-sort', tabs);
+};
+
+/**
  * 收藏标签
  *
  * @returns {AxiosPromise<any>}
