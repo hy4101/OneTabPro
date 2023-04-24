@@ -5,26 +5,37 @@
       <el-button size="mini" @click="exportHtmlBtn" type="warning">导出</el-button>
     </div>
     <div class="otp-tab-group-list">
-      <div class="otp-tab-item otp-collect" :class="['otp-tab-item',activeIndex===-1?'otp-tab-item-active':'']"
+      <div class="otp-tab-item otp-collect" :class="['otp-tab-item']"
            v-if="collectTabs.val.length>0"
            @click="changeTabItem(collectTabs,-1)">
         <div style="font-weight: bold">
           我的收藏<span>({{ collectTabs.val.length }})</span>
         </div>
       </div>
-      <div :class="['otp-tab-item',activeIndex===index?'otp-tab-item-active':'']" v-for="(item,index) in tabGroups"
+      <div :class="['otp-tab-item']" v-for="(item,index) in tabGroups"
            :key="index"
            @click="changeTabItem(item,index)">
         <div :class="['otp-tab-item-line ',tabGroups.length-1!==index?'otp-tab-item-line-ac':'']">
           <span :class="[activeIndex===index?'otp-tab-item-dot-active':'']"></span>
         </div>
-        <div :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'']"
-             @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
+        <div
+          :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'',activeIndex===index?'otp-tab-item-active':'']"
+          @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
-            <div>({{ item.val.length }})</div>
             <input v-model="item.tabGroupName"
                    :style="{'width':item.tabGroupName.length>0?(item.tabGroupName.length*12+10)+'px':'90px'}"
                    placeholder="未命名标签组" @input="updateGroupName"/>
+          </div>
+          <div class="otp-group-footer">
+            <div style="flex: 1">
+              <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.val.length }}</i>
+              <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.time) }}</i>
+            </div>
+            <div class="otp-group-footer-images">
+              <img v-for="(webItem,index) in item.val.slice(0,5).reverse()"
+                   :style="{zIndex:index,right:(index*14+10)+'px'}"
+                   :key="index" :src="webItem.favIconUrl">
+            </div>
           </div>
         </div>
       </div>
@@ -64,7 +75,13 @@ export default {
         for (let site of sites) {
           site.path = site.url;
         }
-        this.tabGroupItem = { time: time, tabGroup: new Date().getTime(), lock: false, val: sites };
+        this.tabGroupItem = {
+          time: time,
+          tabGroup: new Date().getTime(),
+          lock: false,
+          val: sites,
+          tabGroupName: '未命名标签组'
+        };
         this.saveTabs(this.tabGroupItem);
       });
     },
@@ -127,7 +144,12 @@ export default {
       }
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     },
-
+    formatTime (v) {
+      if (isEmpty(v)) {
+        return null;
+      }
+      return dateFormatStr(new Date(v), 'yyyy-MM-dd');
+    },
     /**
      * 初始化
      */
@@ -316,7 +338,7 @@ export default {
     //padding-left: 24px;
     //margin-right: 12px;
 
-    .otp-tab-item:hover:not(:first-child) {
+    .otp-tab-item-info:hover:not(:first-child) {
       background: #1296db;
 
       input, div {
@@ -341,6 +363,30 @@ export default {
         overflow: hidden;
         //padding-left: 4px;
         position: relative;
+        background: #efefef;
+        //border: 1px solid #efefef;
+        border-radius: 6px;
+        padding: 0 10px 10px 10px;
+        margin-bottom: 10px;
+
+        .otp-group-footer {
+          display: flex;
+          width: 100%;
+
+          .otp-group-footer-images {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+
+            img {
+              margin-right: 4px;
+              position: absolute;
+              width: 18px;
+              height: 18px;
+              border-radius: 18px;
+            }
+          }
+        }
 
         .otp-tab-item-info-input {
           height: 38px;
@@ -386,8 +432,9 @@ export default {
       }
 
       .otp-tab-item-active-place {
-        background: #c8c8c86e;
+        background: #C8C8C8FF;
         border-radius: 8px;
+        border: 1px dashed rgba(0, 0, 0, 0.55);
       }
     }
 
@@ -410,10 +457,15 @@ export default {
     //}
 
     .otp-tab-item-active {
-      color: #66b1ff;
+      color: #fff;
+      background: #1296db !important;
+
+      i {
+        color: #e3e3e3 !important;
+      }
 
       input {
-        color: #66b1ff;
+        color: #fff;
       }
     }
 

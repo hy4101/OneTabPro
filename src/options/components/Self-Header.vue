@@ -104,10 +104,10 @@ export default {
     align-items: center;
 
     .otp-teb-filter {
-      width: 225px;
+      width: 255px;
       display: flex;
       justify-content: center;
-      border-radius: 48px;
+      border-radius: 10px;
       height: 38px;
       overflow: hidden;
       background: #ffffff;
