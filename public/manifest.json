@@ -19,8 +19,8 @@
     "type": "module"
   },
   "permissions": [
+    "contextMenus",
     "tabs",
-    "webRequest",
     "storage"
   ],
   "content_scripts": [

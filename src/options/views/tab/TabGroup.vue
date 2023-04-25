@@ -45,7 +45,14 @@
 
 <script>
 
-import { CACHE_TABS_GROUP, COLLECT_TABS, getStorage, isAuthorization, removeItem, setStorage } from '@/libs/Storage';
+import {
+  CACHE_TABS_GROUP,
+  COLLECT_TABS,
+  getStorage,
+  isAuthorization,
+  removeItem,
+  setStorage
+} from '@/libs/Storage';
 import { getCollectTabs, getTabsApi, modifyGroupName, saveTabsApi } from '../../../api/OtherApi';
 import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
@@ -54,9 +61,11 @@ export default {
   name: 'TabGroup',
   data () {
     return {
+      lastTabId: -1,
       currentDragstartTab: null,
       placeIndex: null,
       activeIndex: 0,
+      sendTab: null,
       tabGroups: [],
       collectTabs: { val: [] }
     };
@@ -67,23 +76,30 @@ export default {
      */
     onUpTab () {
       getTabs((res) => {
-        let time = dateFormatStr();
-        let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
-        if (isEmpty(sites)) {
-          return;
-        }
-        for (let site of sites) {
-          site.path = site.url;
-        }
-        this.tabGroupItem = {
-          time: time,
-          tabGroup: new Date().getTime(),
-          lock: false,
-          val: sites,
-          tabGroupName: '未命名标签组'
-        };
-        this.saveTabs(this.tabGroupItem);
+        this.filterUpTab(res);
       });
+    },
+    /**
+     * 过滤收起的标签页
+     * @param res
+     */
+    filterUpTab (res) {
+      let time = dateFormatStr();
+      let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
+      if (isEmpty(sites)) {
+        return;
+      }
+      for (let site of sites) {
+        site.path = site.url;
+      }
+      this.tabGroupItem = {
+        time: time,
+        tabGroup: new Date().getTime(),
+        lock: false,
+        val: sites,
+        tabGroupName: '未命名标签组'
+      };
+      this.saveTabs(this.tabGroupItem);
     },
     /**
      * 保存标签
@@ -120,6 +136,7 @@ export default {
       dragGroup.val.splice(0, 0, newtab);
       newtab.createDate = new Date().getTime();
       newtab.tabGroup = dragGroup.tabGroup;
+      newtab.sort = 0;
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       if (isAuthorization()) {
         saveTabsApi([newtab]).then((res) => {
@@ -157,6 +174,7 @@ export default {
       if (isAuthorization()) {
         getTabsApi().then((res) => {
           let _res = res.data.data;
+          this.saveSendTab(_res);
           if (isEmpty(_res)) {
             return;
           }
@@ -177,6 +195,48 @@ export default {
         }
       }
     },
+
+    /**
+     * 如何登录的，则去保存发送的标签
+     */
+    saveSendTab (_res) {
+      if (!isEmpty(this.sendTab)) {
+        let newtab = Object.assign({}, this.sendTab);
+        newtab.createDate = new Date().getTime();
+        newtab.tabGroup = _res[0].tabGroup;
+        saveTabsApi([newtab]).then((res) => {
+          this.initTabs();
+        });
+        this.sendTab = null;
+      }
+    },
+    /**
+     * 监听是否有标签页发送
+     */
+    onSendTab (tab) {
+      if (isAuthorization()) {
+        this.sendTab = tab;
+        this.initTabs();
+        return;
+      }
+      let temp = getStorage(CACHE_TABS_GROUP);
+      if (!isEmpty(temp)) {
+        let site = tab;
+        site.id = new Date().getTime();
+        site.path = site.url;
+        temp = JSON.parse(temp);
+        temp[0].val = temp[0].val.filter(s => s.url !== tab.url);
+        temp[0].val.splice(0, 0, site);
+        setStorage(CACHE_TABS_GROUP, JSON.stringify(temp));
+      } else {
+        this.filterUpTab([tab]);
+        eventBus.$emit('refresh');
+      }
+      this.initTabs();
+    },
+    /**
+     * 获取收藏的数据
+     */
     getCollectTabData () {
       getCollectTabs().then(res => {
         let _res = res.data.data;
@@ -248,6 +308,11 @@ export default {
     }
   },
   mounted () {
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.type === 'send_tab' && !isEmpty(message.tab)) {
+        this.onSendTab(message.tab);
+      }
+    });
     this.initTabs();
     eventBus.$on('updateTabItem', (item) => {
       if (item.tabGroup === 'collect_id') {
@@ -261,6 +326,11 @@ export default {
           this.tabGroups.splice(this.activeIndex, 1);
         } else {
           this.tabGroups.splice(this.activeIndex, 1, item);
+        }
+        if (isEmpty(this.tabGroups)) {
+          removeItem(CACHE_TABS_GROUP);
+          eventBus.$emit('refresh');
+          return;
         }
         setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       }

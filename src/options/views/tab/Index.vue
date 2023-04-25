@@ -9,7 +9,7 @@
       <h4>更友好的管理界面</h4>
       <h4>更友好的使用体验</h4>
       <h4>支持数据云同步</h4>
-<!--      <a href="https://www.ixigua.com/7203374536908079628?is_new_connect=0&is_new_user=0" target="_blank">如何使用？</a>-->
+      <!--      <a href="https://www.ixigua.com/7203374536908079628?is_new_connect=0&is_new_user=0" target="_blank">如何使用？</a>-->
       <a href="https://www.miniits.com/note/open?id=1680169521620" target="_blank">如何使用？</a>
       <i class="el-icon-reading"></i>
       <div style="height: 150px;display: flex;align-items: flex-end">
@@ -24,7 +24,7 @@ import TabGroup from './TabGroup.vue';
 import Tabs from './Tabs.vue';
 import { isEmpty, toast } from '@/libs/util';
 import {
-  CACHE_TABS_GROUP, COLLECT_TABS,
+  CACHE_TABS_GROUP, COLLECT_TABS, getChromeCache,
   getStorage
 } from '@/libs/Storage';
 import EventBus from '@/libs/EventBus';
@@ -51,6 +51,9 @@ export default {
     });
   },
   methods: {
+    /**
+     * 收起标签页事件
+     */
     onUpTab () {
       chrome.tabs.query({}, (res) => {
         console.log(res);
