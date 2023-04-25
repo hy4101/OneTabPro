@@ -101,6 +101,9 @@ export const getTabs = (callback) => {
       }
       chrome.tabs.remove(needSaveTab.id);
     });
+    _target = _target.filter((item, index, self) =>
+      index === self.findIndex(t => t.url === item.url)
+    );
     return callback(_target);
   });
 };
