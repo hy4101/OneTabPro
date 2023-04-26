@@ -165,6 +165,7 @@ export default {
      * @param message
      */
     deleteItem (item, index, message = '删除成功') {
+      this.tabGroupItem.val = this.tabGroupItem.val.filter((t) => isEmpty(t.dragStatus));
       this.tabGroupItem.val.splice(index, 1);
       this.tempTabs.val = this.tempTabs.val.filter(t => t.id !== item.id);
       EventBus.$emit('updateTabItem', this.tabGroupItem);
@@ -290,7 +291,6 @@ export default {
      */
     deleteDragstartTab () {
       this.deleteItem(this.currentDratItem, this.currentDratIndex, '移动成功');
-      this.tabGroupItem.val = this.tabGroupItem.val.filter((t) => isEmpty(t.dragStatus));
     }
   },
   mounted () {

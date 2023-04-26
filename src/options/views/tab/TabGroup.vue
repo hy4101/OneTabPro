@@ -305,6 +305,7 @@ export default {
         val: []
       });
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
+      this.changeTabItem(this.tabGroups[0], 0);
     }
   },
   mounted () {
