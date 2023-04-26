@@ -12,7 +12,8 @@
       <!--      <a href="https://www.ixigua.com/7203374536908079628?is_new_connect=0&is_new_user=0" target="_blank">如何使用？</a>-->
       <a href="https://www.miniits.com/note/open?id=1680169521620" target="_blank">如何使用？</a>
       <i class="el-icon-reading"></i>
-      <div style="height: 150px;display: flex;align-items: flex-end">
+      <div style="height: 150px;display: flex;align-items: flex-end;flex-direction: column;margin-top: 60px">
+        <span style="text-align: center;width: 100%;margin-bottom: 10px" @click="goManage">进入管理页</span>
         <el-button @click="onUpTab" type="primary">收起标签页</el-button>
       </div>
     </div>
@@ -51,6 +52,12 @@ export default {
     });
   },
   methods: {
+    /**
+     * 进入管理页事件
+     */
+    goManage () {
+      this.isTabs = true;
+    },
     /**
      * 收起标签页事件
      */

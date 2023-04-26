@@ -104,7 +104,18 @@ export const getTabs = (callback) => {
     _target = _target.filter((item, index, self) =>
       index === self.findIndex(t => t.url === item.url)
     );
-    return callback(_target);
+    let mine = [];
+    for (let targetElement of _target) {
+      if (targetElement.url.startsWith('edge//newtab/') ||
+        targetElement.url.startsWith('chrome://') ||
+        targetElement.url.startsWith('edge://') ||
+        targetElement.url.startsWith('chrome//')) {
+        console.log(targetElement.url);
+        continue;
+      }
+      mine.push(targetElement);
+    }
+    return callback(mine);
   });
 };
 
