@@ -11,6 +11,13 @@
           </el-radio-group>
         </div>
         <div class="otp-setting-dialog-item">
+          <label>收起标签忽略固定标签：</label>
+          <el-radio-group v-model="fixedTab" size="medium" @change="settingOpenFixedTab">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="2">否</el-radio>
+          </el-radio-group>
+        </div>
+        <div class="otp-setting-dialog-item">
           <label>导入：</label>
           <input type="file" ref="fileInput" @change="onChange">
         </div>
@@ -46,6 +53,7 @@ export default {
   data () {
     return {
       radio: 2,
+      fixedTab: 2,
       settingDialogVisible: false
     };
   },
@@ -122,6 +130,12 @@ export default {
     settingOpenDeleteSite () {
       setStorage('delete_site', this.radio);
     },
+    /**
+     * 设置固定标签
+     */
+    settingOpenFixedTab () {
+      setStorage('fixed_tab', this.fixedTab);
+    },
     closeDialog () {
       this.settingDialogVisible = false;
       this.$emit('close');
@@ -130,6 +144,8 @@ export default {
   mounted () {
     let ds = getStorage('delete_site') || 2;
     this.radio = +ds;
+    let fixedTab = getStorage('fixed_tab') || 2;
+    this.fixedTab = +fixedTab;
   }
 };
 </script>

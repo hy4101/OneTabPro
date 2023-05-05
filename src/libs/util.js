@@ -1,5 +1,6 @@
 import EventBus from './EventBus';
 import { getHtml } from './oneTabExportTemplate.html.js';
+import { getStorage } from './Storage';
 
 /**
  * 判断属性是否空
@@ -95,8 +96,9 @@ export const getExplorerInfo = () => {
 export const getTabs = (callback) => {
   chrome.tabs.query({ currentWindow: true }, (res) => {
     let _target = [...res];
+    let fixedTab = getStorage('fixed_tab') || 2;
     res.forEach((needSaveTab, v) => {
-      if (needSaveTab.active) {
+      if (needSaveTab.active || (needSaveTab.pinned && +fixedTab === 1)) {
         return;
       }
       chrome.tabs.remove(needSaveTab.id);
@@ -109,8 +111,8 @@ export const getTabs = (callback) => {
       if (targetElement.url.startsWith('edge//newtab/') ||
         targetElement.url.startsWith('chrome://') ||
         targetElement.url.startsWith('edge://') ||
-        targetElement.url.startsWith('chrome//')) {
-        console.log(targetElement.url);
+        targetElement.url.startsWith('chrome//') ||
+        (targetElement.pinned && +fixedTab === 1)) {
         continue;
       }
       mine.push(targetElement);
