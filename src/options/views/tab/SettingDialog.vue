@@ -11,7 +11,7 @@
           </el-radio-group>
         </div>
         <div class="otp-setting-dialog-item">
-          <label>收起标签忽略固定标签：</label>
+          <label>收起时忽略固定标签：</label>
           <el-radio-group v-model="fixedTab" size="medium" @change="settingOpenFixedTab">
             <el-radio :label="1">是</el-radio>
             <el-radio :label="2">否</el-radio>
