@@ -11,6 +11,7 @@ chromeName.forEach(name => {
 });
 
 module.exports = {
+  lintOnSave: false,
   pages: pagesObj,
   productionSourceMap: false,
   configureWebpack: (config) => {

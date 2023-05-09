@@ -20,6 +20,9 @@
               <el-tooltip effect="dark" content="打开所有" placement="top-start">
                 <i class="el-icon-link obp-opts-icon" @click="toolbarBtn(0)"></i>
               </el-tooltip>
+              <el-tooltip effect="dark" content="去重" placement="top-start">
+                <i class="el-icon-magic-stick obp-opts-icon" @click="toolbarBtn(50)"></i>
+              </el-tooltip>
               <el-tooltip effect="dark" content="删除标签组" placement="top-start">
                 <i class="el-icon-delete obp-opts-icon" @click="toolbarBtn(1)"
                    style=""></i>
@@ -246,6 +249,22 @@ export default {
         this.urlSortColor = this.urlSortColor === '#657174' ? '#409EFF' : '#657174';
         let tempTabs = [...this.tempTabs.val];
         this.sortTab(tempTabs, this.nameSortColor, this.urlSortColor);
+      }
+      if (50 === type) {
+        let duplication = Object.assign({}, this.tabGroupItem);
+        duplication.val = duplication.val.filter((item, index, self) =>
+          index === self.findIndex(t => t.url === item.url)
+        );
+        EventBus.$emit('updateTabItem', duplication);
+        toast('已去重');
+        if (isAuthorization()) {
+          for (let valElement of this.tabGroupItem.val) {
+            if (!duplication.val.includes(valElement.id)) {
+              deleteApi(valElement.id);
+            }
+          }
+        }
+        this.tabGroupItem = duplication;
       }
     },
     /**
