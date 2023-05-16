@@ -7,7 +7,7 @@ chrome.action.onClicked.addListener((tab) => {
   openOptionsPage();
   setTimeout(() => {
     chrome.runtime.sendMessage({ type: 'receive_tab' });
-  }, 200);
+  }, 500);
 });
 
 /**
