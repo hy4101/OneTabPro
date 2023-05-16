@@ -2,8 +2,12 @@
  * 跳转到选项页面
  * 同时将tab页固定
  */
+
 chrome.action.onClicked.addListener((tab) => {
   openOptionsPage();
+  setTimeout(() => {
+    chrome.runtime.sendMessage({ type: 'receive_tab' });
+  }, 200);
 });
 
 /**

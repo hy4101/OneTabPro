@@ -313,6 +313,12 @@ export default {
       if (message.type === 'send_tab' && !isEmpty(message.tab)) {
         this.onSendTab(message.tab);
       }
+      if (message.type === 'receive_tab') {
+        let receive = getStorage(message.type);
+        if (!isEmpty(receive) && +receive === 1) {
+          this.onUpTab();
+        }
+      }
     });
     this.initTabs();
     eventBus.$on('updateTabItem', (item) => {

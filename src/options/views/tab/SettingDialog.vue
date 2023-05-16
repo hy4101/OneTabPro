@@ -4,6 +4,13 @@
                :before-close="closeDialog">
       <div class="otp-setting-dialog">
         <div class="otp-setting-dialog-item">
+          <label>点击图标立即收起：</label>
+          <el-radio-group v-model="receiveTab" size="medium" @change="settingReceiveTab">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="2">否</el-radio>
+          </el-radio-group>
+        </div>
+        <div class="otp-setting-dialog-item">
           <label>打开标签后删除标签：</label>
           <el-radio-group v-model="radio" size="medium" @change="settingOpenDeleteSite">
             <el-radio :label="1">是</el-radio>
@@ -54,6 +61,7 @@ export default {
     return {
       radio: 2,
       fixedTab: 2,
+      receiveTab: 2,
       settingDialogVisible: false
     };
   },
@@ -136,6 +144,12 @@ export default {
     settingOpenFixedTab () {
       setStorage('fixed_tab', this.fixedTab);
     },
+    /**
+     * 设置是否立即收起标签
+     */
+    settingReceiveTab () {
+      setStorage('receive_tab', this.receiveTab);
+    },
     closeDialog () {
       this.settingDialogVisible = false;
       this.$emit('close');
@@ -146,6 +160,8 @@ export default {
     this.radio = +ds;
     let fixedTab = getStorage('fixed_tab') || 2;
     this.fixedTab = +fixedTab;
+    let receiveTab = getStorage('receive_tab') || 2;
+    this.receiveTab = +receiveTab;
   }
 };
 </script>
