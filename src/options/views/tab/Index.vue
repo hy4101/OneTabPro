@@ -63,7 +63,6 @@ export default {
      */
     onUpTab () {
       chrome.tabs.query({}, (res) => {
-        console.log(res);
         if (isEmpty(res) || res.length <= 1) {
           toast('暂无标签页可收起');
           return;

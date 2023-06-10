@@ -14,6 +14,9 @@
               <el-tooltip effect="dark" content="创建分组" placement="top-start">
                 <i class="el-icon-circle-plus obp-opts-icon" @click="toolbarBtn(20)"></i>
               </el-tooltip>
+              <el-tooltip effect="dark" content="合并分组" placement="top-start">
+                <i class="el-icon-s-help obp-opts-icon" @click="toolbarBtn(60)"></i>
+              </el-tooltip>
               <el-tooltip effect="dark" content="设置" placement="top-start">
                 <i class="el-icon-s-tools obp-opts-icon" @click="toolbarBtn(10)"></i>
               </el-tooltip>
@@ -73,6 +76,7 @@
       </div>
     </div>
     <setting-dialog :show="isShowSettingDialog" @close="onClose"></setting-dialog>
+    <merge-group :show="isShowMergeGroupDialog"></merge-group>
   </div>
 </template>
 
@@ -86,6 +90,7 @@ import Collect from '../../components/icon/Collect.vue';
 import NameSortIcon from '../../components/icon/NameSortIcon.vue';
 import UrlSortIcon from '../../components/icon/UrlSortIcon.vue';
 import SettingDialog from './SettingDialog.vue';
+import MergeGroup from './MergeGroup.vue';
 
 export default {
   name: 'tabs',
@@ -93,7 +98,8 @@ export default {
     Collect,
     NameSortIcon,
     UrlSortIcon,
-    SettingDialog
+    SettingDialog,
+    MergeGroup
   },
   props: {
     activeGroupIndex: {
@@ -117,6 +123,7 @@ export default {
       currentDratIndex: null,
       currentDratItem: null,
       isShowSettingDialog: false,
+      isShowMergeGroupDialog: false,
       tabGroupItem: { time: null, val: [] },
       tempTabs: null
     };
@@ -265,6 +272,9 @@ export default {
           }
         }
         this.tabGroupItem = duplication;
+      }
+      if (60 === type){
+        this.isShowMergeGroupDialog = true;
       }
     },
     /**

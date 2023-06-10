@@ -16,12 +16,21 @@ export const saveTabsApi = (params) => {
 };
 
 /**
+ * 新增标签组
+ * @param params
+ * @returns {AxiosPromise<any>}
+ */
+export const saveTabGroupApi = (params) => {
+  return axios.post(USER_URL + 'save-tab-group', params);
+};
+
+/**
  * 查看标签记录
  * @param params
  * @returns {AxiosPromise<any>}
  */
 export const getTabsApi = () => {
-  return axios.get(USER_URL + 'get-tab');
+  return axios.get(USER_URL + 'get-tab-group');
 };
 
 /**

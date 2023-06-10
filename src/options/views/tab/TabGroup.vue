@@ -37,6 +37,14 @@
                    :key="index" :src="webItem.favIconUrl">
             </div>
           </div>
+          <div class="otp-tab-item-sotr">
+            <div @click.stop="setGroupSort(index,0)" v-if="index>0">
+              <sort  ></sort>
+            </div>
+            <div @click.stop="setGroupSort(index,1)" v-if="index<tabGroups.length-1">
+              <sort  style="transform: rotate(180deg)"></sort>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -53,12 +61,13 @@ import {
   removeItem,
   setStorage
 } from '@/libs/Storage';
-import { getCollectTabs, getTabsApi, modifyGroupName, saveTabsApi } from '../../../api/OtherApi';
+import { getCollectTabs, getTabsApi, modifyGroupName, saveTabGroupApi, saveTabsApi } from '../../../api/OtherApi';
 import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
-
+import Sort from '../../components/icon/Sort.vue';
 export default {
   name: 'TabGroup',
+  components: { Sort },
   data () {
     return {
       lastTabId: -1,
@@ -71,6 +80,27 @@ export default {
     };
   },
   methods: {
+    setGroupSort (index, type) {
+      console.log(type);
+      let tabGroups = [...this.tabGroups];
+      let target = tabGroups[index];
+      if (type === 0) {
+        let temp = tabGroups[ index - 1 ];
+        tabGroups[index - 1] = target;
+        tabGroups[index] = temp;
+      }
+      if (type === 1) {
+        let temp = tabGroups[ index + 1 ];
+       tabGroups[index + 1] = target;
+       tabGroups[index] = temp;
+      }
+      this.tabGroups = tabGroups;
+     if (isAuthorization()) {
+
+     } else {
+       setStorage(CACHE_TABS_GROUP, JSON.stringify(tabGroups));
+     }
+    },
     /**
      * 收起标签
      */
@@ -109,7 +139,7 @@ export default {
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       this.changeTabItem(groupItem, 0);
       if (isAuthorization()) {
-        saveTabsApi(groupItem.val).then((res) => {
+        saveTabGroupApi(groupItem.val).then((res) => {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
         });
       }
@@ -309,6 +339,7 @@ export default {
     }
   },
   mounted () {
+    this.initTabs();
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'send_tab' && !isEmpty(message.tab)) {
         this.onSendTab(message.tab);
@@ -320,7 +351,6 @@ export default {
         }
       }
     });
-    this.initTabs();
     eventBus.$on('updateTabItem', (item) => {
       if (item.tabGroup === 'collect_id') {
         if (item.val.length <= 0) {
@@ -423,11 +453,22 @@ export default {
       }
     }
 
+    .otp-tab-item-info:hover .otp-tab-item-sotr{
+      display: flex;
+    }
+
     .otp-tab-item {
       display: flex;
       cursor: pointer;
       align-items: center;
       padding: 0 20px;
+
+      .otp-tab-item-sotr{
+        display: none;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
 
       .otp-tab-item-info {
         display: flex;
