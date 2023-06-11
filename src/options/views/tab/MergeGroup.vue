@@ -3,6 +3,7 @@
     <el-dialog title="合并分组" :visible.sync="mergeGroupDialogVisible" width="50%"
                :before-close="closeDialog">
       <div class="otp-merge-group-dialog">
+
         <div class="otp-group-from otp-group-layout">
           <div v-for="(item,index) in tabGroup" @click="selectTabGroup(0,index)"
                :class="['otp-group-item',index===leftIndex?'active-item':'']">
@@ -20,6 +21,7 @@
           <!--          <i class="el-icon-sort-up" style="margin-right: 10px;color:#939cac"></i>-->
           合并到
         </h3>
+
         <div class="otp-group-to otp-group-layout">
           <div v-for="(item,index) in tabGroup" @click="selectTabGroup(1,index)"
                :class="['otp-group-item',index===rightIndex?'active-item':'']">
@@ -72,6 +74,14 @@ export default {
       let left = this.tabGroup[this.leftIndex];
       let right = this.tabGroup[this.rightIndex];
 
+      if (isEmpty(left)) {
+        toast('请选择需要合并的组(左边)');
+        return;
+      }
+      if (isEmpty(right)) {
+        toast('请选择需要合并的目标组(右边)');
+        return;
+      }
       if (left.id === right.id) {
         toast('无法从自己合并到自己组中');
         return;
@@ -139,6 +149,10 @@ export default {
 
   .otp-merge-group-dialog {
     display: flex;
+
+    .merge-title{
+      padding: 20px;
+    }
 
     .otp-merge-tip {
       display: flex;
