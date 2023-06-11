@@ -32,7 +32,7 @@
               <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.createDate * 1000) }}</i>
             </div>
             <div class="otp-group-footer-images">
-              <img v-for="(webItem,index) in item.tabs.slice(0,5).reverse()"
+              <img v-for="(webItem,index) in item.tabs.filter(t=>t.favIconUrl!=null).slice(0,5).reverse()"
                    :style="{zIndex:index,right:(index*14+10)+'px'}"
                    :key="index" :src="webItem.favIconUrl">
             </div>
@@ -159,6 +159,19 @@ export default {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
         });
       }
+    },
+    /**
+     *
+     * 导入onetab的数据
+     * @param groups
+     */
+    importOneTabData (groups) {
+      debugger;
+      for (let i = 0; i < groups.length; i++) {
+        let group = groups[i];
+        this.filterUpTab(group, '来自：导入OneTab-' + (i + 1));
+      }
+      this.initTabs();
     },
     /**
      * 选择事件
@@ -412,6 +425,7 @@ export default {
     eventBus.$on('init_tab_data', this.initTabs);
     eventBus.$on('onUpTab', this.onUpTab);
     eventBus.$on('saveTabs', this.saveTabs);
+    eventBus.$on('importOneTabData', this.importOneTabData);
     eventBus.$on('dragstartTab', (tab) => {
       this.currentDragstartTab = tab;
     });

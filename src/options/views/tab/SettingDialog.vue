@@ -28,6 +28,24 @@
           <label>导入：</label>
           <input type="file" ref="fileInput" @change="onChange">
         </div>
+        <div class="otp-setting-dialog-item">
+          <el-collapse v-model="activeNames">
+            <el-collapse-item title="导入OneTab数据" name="1">
+              <div style="text-align: left;">
+                <a target="_blank" href="https://www.miniits.com/note/open?id=1686498020109">如何导入？</a>
+              </div>
+              <el-input
+                type="textarea"
+                :rows="10"
+                placeholder="请粘贴OneTab数据"
+                v-model="oneTabData">
+              </el-input>
+              <div style="text-align: left;margin-top: 10px">
+                <el-button type="primary" @click="importOneTabData">确认导入</el-button>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
 
         <a href="https://www.miniits.com/note/open?id=1680169521620" target="_blank"
            style="margin-top: 20px">使用教程</a>
@@ -40,7 +58,7 @@
 import { setStorage, getStorage } from '../../../libs/Storage';
 import { isEmpty, parseXmlString, toast } from '../../../libs/util';
 import EventBus from '../../../libs/EventBus';
-import { collectApi, collectImportApi } from '../../../api/OtherApi';
+import { collectImportApi } from '../../../api/OtherApi';
 
 export default {
   name: 'SettingDialog',
@@ -59,6 +77,8 @@ export default {
   },
   data () {
     return {
+      activeNames: [],
+      oneTabData: null,
       radio: 2,
       fixedTab: 2,
       receiveTab: 2,
@@ -66,6 +86,22 @@ export default {
     };
   },
   methods: {
+    importOneTabData () {
+      var lines = this.oneTabData.split('\n');
+      let groups = [];
+      let group = [];
+      for (let line of lines) {
+        console.log(line);
+        if (isEmpty(line) && !isEmpty(group)) {
+          groups.push([...group]);
+          group = [];
+        } else {
+          let info = line.split('|');
+          group.push({ url: info[0], title: info[1] });
+        }
+      }
+      EventBus.$emit('importOneTabData', groups);
+    },
     onChange (e) {
       let reader = new FileReader();
       reader.readAsText(e.target.files[0], 'UTF-8');
@@ -175,6 +211,16 @@ export default {
 
     .otp-setting-dialog-item {
       margin-top: 10px;
+      width: 100%;
+      display: flex;
+
+      .el-collapse {
+        flex: 1;
+        //width: 100%;
+        //display: flex;
+        //flex-direction: column;
+        //align-items: flex-start;
+      }
     }
   }
 }
