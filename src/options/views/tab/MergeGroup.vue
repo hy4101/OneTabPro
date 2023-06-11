@@ -43,7 +43,7 @@
 <script>
 import { getTabsApi, mergeTabGroup } from '../../../api/OtherApi';
 import { dateFormatStr, isEmpty, toast } from '../../../libs/util';
-import { isAuthorization } from '@/libs/Storage';
+import { CACHE_TABS_GROUP, getStorage, isAuthorization, setStorage } from '@/libs/Storage';
 import EventBus from '@/libs/EventBus';
 
 export default {
@@ -71,8 +71,8 @@ export default {
   },
   methods: {
     saveMergeTabGroup () {
-      let left = this.tabGroup[this.leftIndex];
-      let right = this.tabGroup[this.rightIndex];
+      let left = Object.assign({}, this.tabGroup[this.leftIndex]);
+      let right = Object.assign({}, this.tabGroup[this.rightIndex]);
 
       if (isEmpty(left)) {
         toast('请选择需要合并的组(左边)');
@@ -90,12 +90,17 @@ export default {
         mergeTabGroup(left.id, right.id).then((res) => {
           this.tabGroup.splice(this.leftIndex, 1);
           toast('合并成功');
-          this.leftIndex = null;
-          this.rightIndex = null;
-
-          EventBus.$emit('refresh');
         });
+      } else {
+        right.tabs = right.tabs.concat(left.tabs);
+        this.tabGroup.splice(this.rightIndex, 1, right);
+        this.tabGroup.splice(this.leftIndex, 1);
+        setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroup));
+        toast('合并成功');
       }
+      this.leftIndex = null;
+      this.rightIndex = null;
+      EventBus.$emit('refresh');
     },
     selectTabGroup (type, index) {
       if (type === 0) {
@@ -116,10 +121,18 @@ export default {
       return dateFormatStr(new Date(v), 'yyyy-MM-dd');
     },
     initMergeGroup () {
-      getTabsApi().then((res) => {
-        let _res = res.data.data;
-        this.tabGroup = _res;
-      });
+      if (isAuthorization()) {
+        getTabsApi().then((res) => {
+          let _res = res.data.data;
+          this.tabGroup = _res;
+        });
+      } else {
+        let temp = getStorage(CACHE_TABS_GROUP);
+        if (!isEmpty(temp)) {
+          temp = JSON.parse(temp);
+          this.tabGroup = temp;
+        }
+      }
     }
   },
   mounted () {
@@ -150,7 +163,7 @@ export default {
   .otp-merge-group-dialog {
     display: flex;
 
-    .merge-title{
+    .merge-title {
       padding: 20px;
     }
 
@@ -174,13 +187,12 @@ export default {
       display: flex;
       flex-direction: column;
       height: 500px;
-      border: 1px solid;
+      border: 1px solid #eee;
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
 
       .otp-group-item {
-        flex: 1;
         height: 40px;
         border: 1px solid #c8c8c8;
         margin: 10px;

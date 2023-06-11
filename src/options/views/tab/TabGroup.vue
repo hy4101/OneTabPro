@@ -6,10 +6,10 @@
     </div>
     <div class="otp-tab-group-list">
       <div class="otp-tab-item otp-collect" :class="['otp-tab-item']"
-           v-if="collectTabs.val.length>0"
+           v-if="collectTabs.tabs.length>0"
            @click="changeTabItem(collectTabs,-1)">
         <div style="font-weight: bold">
-          我的收藏<span>({{ collectTabs.val.length }})</span>
+          我的收藏<span>({{ collectTabs.tabs.length }})</span>
         </div>
       </div>
       <div :class="['otp-tab-item']" v-for="(item,index) in tabGroups"
@@ -23,7 +23,7 @@
           @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
             <input v-model="item.name"
-                   :style="{'width':item.name.length>0?(item.name.length*12+10)+'px':'90px'}"
+                   :style="{'width':item.name.length>0?(item.name.length*12+20)+'px':'90px'}"
                    placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
           <div class="otp-group-footer">
@@ -85,7 +85,7 @@ export default {
       activeIndex: 0,
       sendTab: null,
       tabGroups: [],
-      collectTabs: { val: [] }
+      collectTabs: { tabs: [] }
     };
   },
   methods: {
@@ -127,20 +127,23 @@ export default {
      * 过滤收起的标签页
      * @param res
      */
-    filterUpTab (res) {
+    filterUpTab (res, groupName = '未命名标签组') {
       let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
       if (isEmpty(sites)) {
         return;
       }
       for (let site of sites) {
         site.path = site.url;
+        site.tabGroupName = groupName;
       }
+      let currentTime = new Date().getTime();
       this.tabGroupItem = {
-        createDate: new Date().getTime() / 1000,
-        tabGroup: new Date().getTime(),
+        createDate: currentTime / 1000,
+        tabGroup: currentTime,
+        id: currentTime,
         lock: false,
         tabs: sites,
-        name: '未命名标签组'
+        name: groupName
       };
       this.saveTabs(this.tabGroupItem);
     },
@@ -174,7 +177,6 @@ export default {
         return;
       }
       let dragGroup = this.tabGroups[index];
-      debugger;
       let newtab = Object.assign({}, this.currentDragstartTab);
       newtab.id = new Date().getTime();
       dragGroup.tabs.splice(0, 0, newtab);
@@ -236,7 +238,7 @@ export default {
         temp = getStorage(COLLECT_TABS);
         if (!isEmpty(temp)) {
           temp = JSON.parse(temp);
-          this.collectTabs = { tabGroup: 'collect_id', val: temp };
+          this.collectTabs = { tabGroup: 'collect_id', tabs: temp };
         }
       }
     },
@@ -270,8 +272,8 @@ export default {
         site.id = new Date().getTime();
         site.path = site.url;
         temp = JSON.parse(temp);
-        temp[0].val = temp[0].val.filter(s => s.url !== tab.url);
-        temp[0].val.splice(0, 0, site);
+        temp[0].tabs = temp[0].tabs.filter(s => s.url !== tab.url);
+        temp[0].tabs.splice(0, 0, site);
         setStorage(CACHE_TABS_GROUP, JSON.stringify(temp));
       } else {
         this.filterUpTab([tab]);
@@ -326,6 +328,7 @@ export default {
             continue;
           }
           if (valElement.title.toLowerCase().indexOf(v.toLowerCase()) >= 0) {
+            valElement.groupName = tabGroup.name;
             tgs.push(valElement);
           }
         }
@@ -342,12 +345,13 @@ export default {
       exportHtml(tabGroups);
     },
     createGroup () {
-      let createTime = new Date();
+      let createTime = new Date().getTime();
       this.tabGroups.splice(0, 0, {
-        tabGroup: createTime.getTime(),
+        tabGroup: createTime,
         name: '未命名标签组',
-        time: dateFormatStr(createTime),
-        tabs: []
+        tabs: [],
+        id: createTime,
+        createDate: createTime / 1000
       });
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       this.changeTabItem(this.tabGroups[0], 0);
@@ -365,13 +369,20 @@ export default {
           this.onUpTab();
         }
       }
+      if (message.type === 'one_tab_pro_send_right_or_left') {
+        this.filterUpTab(message.tabs, message.groupName);
+        let ids = message.tabs.map(t => t.id);
+        chrome.tabs.remove(ids, () => {
+          console.log('成功');
+        });
+      }
     });
     eventBus.$on('updateTabItem', (item) => {
       if (item.tabGroup === 'collect_id') {
-        if (item.val.length <= 0) {
+        if (item.tabs.length <= 0) {
           removeItem('collect_tabs');
         } else {
-          setStorage('collect_tabs', JSON.stringify(item.val));
+          setStorage('collect_tabs', JSON.stringify(item.tabs));
         }
       } else {
         if (isEmpty(item.tabs)) {

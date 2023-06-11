@@ -23,7 +23,7 @@
               <el-tooltip effect="dark" content="打开所有" placement="top-start">
                 <i class="el-icon-link obp-opts-icon" @click="toolbarBtn(0)"></i>
               </el-tooltip>
-              <el-tooltip effect="dark" content="去重" placement="top-start">
+              <el-tooltip effect="dark" content="一键去重" placement="top-start">
                 <i class="el-icon-magic-stick obp-opts-icon" @click="toolbarBtn(50)"></i>
               </el-tooltip>
               <el-tooltip effect="dark" content="删除标签组" placement="top-start">
@@ -42,7 +42,7 @@
               </el-tooltip>
             </div>
             <div style="margin-left: 10px;user-select: none">
-              创建于： {{ tabGroupItem.time }}，包含{{ tabGroupItem.tabs.length }}个标签页
+              创建于： {{ formatTime(tabGroupItem.createDate * 1000) }}，包含{{ tabGroupItem.tabs.length }}个标签页
             </div>
           </template>
         </div>
@@ -68,6 +68,7 @@
                   <div @click="onSite(site,index)" class="fsb-sl-info">
                     {{ site.title }}
                   </div>
+                  <div v-if="activeGroupIndex<0">——[ 组：{{ site.groupName }} ]</div>
                 </div>
               </div>
             </div>
@@ -83,7 +84,7 @@
 <script>
 
 import { getStorage, isAuthorization } from '../../../libs/Storage';
-import { isEmpty, openSite, toast } from '../../../libs/util';
+import { dateFormatStr, isEmpty, openSite, toast } from '../../../libs/util';
 import { collectApi, deleteApi, deleteTabGroupApi, lockTab, setTabSort } from '../../../api/OtherApi.js';
 import EventBus from '@/libs/EventBus';
 import Collect from '../../components/icon/Collect.vue';
@@ -135,6 +136,12 @@ export default {
     }
   },
   methods: {
+    formatTime (v) {
+      if (isEmpty(v)) {
+        return null;
+      }
+      return dateFormatStr(new Date(v), 'yyyy-MM-dd');
+    },
     /**
      * 放到何处
      * @param $event
@@ -254,8 +261,6 @@ export default {
       }
       if (50 === type) {
         let duplication = Object.assign({}, this.tabGroupItem);
-
-        // 使用 reduce 方法进行对象属性去重
         const uniqueObjects = Object.values(
           duplication.tabs.reduce((acc, obj) => {
             acc[obj.path] = obj;
