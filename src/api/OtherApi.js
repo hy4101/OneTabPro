@@ -5,6 +5,7 @@ import { isEmpty, toast } from '@/libs/util';
 import EventBus from '../libs/EventBus';
 
 export const USER_URL = getServiceHost() + 'tab/';
+export const TAB_GROUP_URL = getServiceHost() + 'tab-group/';
 const qs = require('qs');
 /**
  * 保存标签
@@ -12,7 +13,7 @@ const qs = require('qs');
  * @returns {AxiosPromise<any>}
  */
 export const saveTabsApi = (params) => {
-  return axios.post(USER_URL + 'archive-tab', params);
+  return axios.post(USER_URL + 'drag-tab', params);
 };
 
 /**
@@ -42,15 +43,6 @@ export const getCollectTabs = () => {
 };
 
 /**
- * 删除标签组
- * @returns {AxiosPromise<any>}
- * @param group
- */
-export const deleteTabGroupApi = (group) => {
-  return axios.delete(USER_URL + 'delete-tab/' + group);
-};
-
-/**
  * 删除标签
  * @returns {AxiosPromise<any>}
  * @param id
@@ -72,11 +64,11 @@ export const lockTab = (group, lock) => {
 /**
  * 修改标签组名称
  * @returns {AxiosPromise<any>}
- * @param group
+ * @param id
  * @param name
  */
-export const modifyGroupName = (group, name) => {
-  return axios.post(USER_URL + 'modify-group-name/' + group + '/' + name);
+export const modifyGroupName = (id, name) => {
+  return axios.post(USER_URL + 'modify-group-name2/' + id + '/' + name);
 };
 
 /**
@@ -150,3 +142,31 @@ function addCollectTab (tab, sourceId) {
   toast(mes);
   EventBus.$emit('init_tab_data', false);
 }
+
+/**
+ * 设置标签组的排序
+ * @param ids
+ * @returns {AxiosPromise<any>}
+ */
+export const setTabGroupSort = (ids) => {
+  return axios.post(TAB_GROUP_URL + 'set-tab-group', ids);
+};
+
+/**
+ * 删除标签组
+ * @returns {AxiosPromise<any>}
+ * @param id
+ */
+export const deleteTabGroupApi = (id) => {
+  return axios.delete(TAB_GROUP_URL + 'tab-group/' + id);
+};
+
+/**
+ * 合并标签组
+ * @param id
+ * @param targetId
+ * @returns {AxiosPromise}
+ */
+export const mergeTabGroup = (id, targetId) => {
+  return axios.post(TAB_GROUP_URL + 'merge-group/' + id + '/' + targetId);
+};

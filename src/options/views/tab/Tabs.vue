@@ -6,7 +6,7 @@
         <div class="fbb-toolbar">
           <template v-if="activeGroupIndex<0">
             <div style="margin-left: 10px;user-select: none">
-              搜索结果： 包含{{ tabGroupItem.val.length }}个标签页
+              搜索结果： 包含{{ tabGroupItem.tabs.length }}个标签页
             </div>
           </template>
           <template v-else>
@@ -42,13 +42,13 @@
               </el-tooltip>
             </div>
             <div style="margin-left: 10px;user-select: none">
-              创建于： {{ tabGroupItem.time }}，包含{{ tabGroupItem.val.length }}个标签页
+              创建于： {{ tabGroupItem.time }}，包含{{ tabGroupItem.tabs.length }}个标签页
             </div>
           </template>
         </div>
         <div style="overflow-y: auto; width: 100%;height: 100%;margin-top: 48px;padding-bottom: 100px;">
-          <template v-if="tabGroupItem.val!==null&&tabGroupItem.val.length>0">
-            <div class="ftb-tabs-item" v-for="(site,index) in tabGroupItem.val" :key="site.id">
+          <template v-if="tabGroupItem.tabs!==null&&tabGroupItem.tabs.length>0">
+            <div class="ftb-tabs-item" v-for="(site,index) in tabGroupItem.tabs" :key="site.id">
               <div v-if="site.dragStatus" @dragover="e=>e.preventDefault()"
                    @drop="changeTabSort($event,site,index)" draggable="true"
                    class="active-item-drop"></div>
@@ -76,7 +76,7 @@
       </div>
     </div>
     <setting-dialog :show="isShowSettingDialog" @close="onClose"></setting-dialog>
-    <merge-group :show="isShowMergeGroupDialog"></merge-group>
+    <merge-group :show="isShowMergeGroupDialog" @close="onClose"></merge-group>
   </div>
 </template>
 
@@ -124,17 +124,12 @@ export default {
       currentDratItem: null,
       isShowSettingDialog: false,
       isShowMergeGroupDialog: false,
-      tabGroupItem: { time: null, val: [] },
+      tabGroupItem: { time: null, tabs: [] },
       tempTabs: null
     };
   },
   watch: {
     tabGroup (v) {
-      if (!isEmpty(v.val)) {
-        // v.val.sort((a, b) => {
-        //   return a.createDate > b.createDate ? -1 : 1;
-        // });
-      }
       this.tabGroupItem = v;
       this.tempTabs = Object.assign({}, v);
     }
@@ -149,10 +144,10 @@ export default {
       console.log('进入的下标:', index);
       this.placeItemIndex = index;
       $event.preventDefault();
-      let temp = this.tabGroupItem.val;
+      let temp = this.tabGroupItem.tabs;
       temp = temp.filter((t) => isEmpty(t.dragStatus));
       temp.splice(index, 0, { dragStatus: true });
-      this.tabGroupItem.val = temp;
+      this.tabGroupItem.tabs = temp;
     },
     /**
      * 拖拽时进入可放置区域
@@ -160,12 +155,12 @@ export default {
      */
     changeTabSort (event, item, index) {
       event.preventDefault();
-      let val = this.tabGroupItem.val.filter(t => t.id !== this.currentDratItem.id);
+      let val = this.tabGroupItem.tabs.filter(t => t.id !== this.currentDratItem.id);
       val.splice(this.placeItemIndex, 0, this.currentDratItem);
-      this.tabGroupItem.val = val.filter((t) => isEmpty(t.dragStatus));
+      this.tabGroupItem.tabs = val.filter((t) => isEmpty(t.dragStatus));
       EventBus.$emit('updateTabItem', this.tabGroupItem);
       if (isAuthorization()) {
-        setTabSort(this.tabGroupItem.val);
+        setTabSort(this.tabGroupItem.tabs);
       }
     },
     /**
@@ -175,9 +170,9 @@ export default {
      * @param message
      */
     deleteItem (item, index, message = '删除成功') {
-      this.tabGroupItem.val = this.tabGroupItem.val.filter((t) => isEmpty(t.dragStatus));
-      this.tabGroupItem.val.splice(index, 1);
-      this.tempTabs.val = this.tempTabs.val.filter(t => t.id !== item.id);
+      this.tabGroupItem.tabs = this.tabGroupItem.tabs.filter((t) => isEmpty(t.dragStatus));
+      this.tabGroupItem.tabs.splice(index, 1);
+      this.tempTabs.tabs = this.tempTabs.tabs.filter(t => t.id !== item.id);
       EventBus.$emit('updateTabItem', this.tabGroupItem);
       toast(message);
       if (isAuthorization()) {
@@ -218,8 +213,8 @@ export default {
      */
     toolbarBtn (type) {
       if (0 === type) {
-        this.tabGroupItem.val.forEach(item => {
-          window.open(item.url, '_blank');
+        this.tabGroupItem.tabs.forEach(item => {
+          window.open(item.path, '_blank');
         });
       }
       if (1 === type) {
@@ -249,31 +244,40 @@ export default {
       }
       if (30 === type) {
         this.nameSortColor = this.nameSortColor === '#657174' ? '#409EFF' : '#657174';
-        let tempTabs = [...this.tempTabs.val];
+        let tempTabs = [...this.tempTabs.tabs];
         this.sortTab(tempTabs, this.nameSortColor, this.urlSortColor);
       }
       if (40 === type) {
         this.urlSortColor = this.urlSortColor === '#657174' ? '#409EFF' : '#657174';
-        let tempTabs = [...this.tempTabs.val];
+        let tempTabs = [...this.tempTabs.tabs];
         this.sortTab(tempTabs, this.nameSortColor, this.urlSortColor);
       }
       if (50 === type) {
         let duplication = Object.assign({}, this.tabGroupItem);
-        duplication.val = duplication.val.filter((item, index, self) =>
-          index === self.findIndex(t => t.url === item.url)
+
+        // 使用 reduce 方法进行对象属性去重
+        const uniqueObjects = Object.values(
+          duplication.tabs.reduce((acc, obj) => {
+            acc[obj.path] = obj;
+            return acc;
+          }, {})
         );
+
+        let ids = uniqueObjects.map(t => t.id);
+
+        duplication.tabs = uniqueObjects;
         EventBus.$emit('updateTabItem', duplication);
         toast('已去重');
         if (isAuthorization()) {
-          for (let valElement of this.tabGroupItem.val) {
-            if (!duplication.val.includes(valElement.id)) {
+          for (let valElement of this.tabGroupItem.tabs) {
+            if (!ids.includes(valElement.id)) {
               deleteApi(valElement.id);
             }
           }
         }
         this.tabGroupItem = duplication;
       }
-      if (60 === type){
+      if (60 === type) {
         this.isShowMergeGroupDialog = true;
       }
     },
@@ -303,15 +307,16 @@ export default {
           }
         });
       }
-      this.tabGroupItem.val = tempTabs;
+      this.tabGroupItem.tabs = tempTabs;
     },
     onClose () {
       this.isShowSettingDialog = false;
+      this.isShowMergeGroupDialog = false;
     },
     deleteTabGroup () {
       EventBus.$emit('deleteGroup');
       if (isAuthorization()) {
-        deleteTabGroupApi(this.tabGroupItem.tabGroup);
+        deleteTabGroupApi(this.tabGroupItem.id);
       }
       toast('标签组已删除');
     },

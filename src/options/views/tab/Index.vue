@@ -40,7 +40,7 @@ export default {
       isTabs: true,
       activeGroupIndex: 0,
       tab: {
-        time: null, val: [{ favIconUrl: null, path: null, title: null }]
+        time: null, tabs: [{ favIconUrl: null, path: null, title: null }]
       }
     };
   },

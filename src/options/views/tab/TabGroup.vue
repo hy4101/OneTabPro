@@ -22,27 +22,28 @@
           :class="['otp-tab-item-info',placeIndex===index?'otp-tab-item-active-place':'',activeIndex===index?'otp-tab-item-active':'']"
           @drop="placeTab($event,item,index)" @dragover="onDragover($event,index)">
           <div class="otp-tab-item-info-input">
-            <input v-model="item.tabGroupName"
-                   :style="{'width':item.tabGroupName.length>0?(item.tabGroupName.length*12+10)+'px':'90px'}"
+            <input v-model="item.name"
+                   :style="{'width':item.name.length>0?(item.name.length*12+10)+'px':'90px'}"
                    placeholder="未命名标签组" @input="updateGroupName"/>
           </div>
           <div class="otp-group-footer">
             <div>
-              <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.val.length }}</i>
-              <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.time) }}</i>
+              <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.tabs.length }}</i>
+              <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.createDate * 1000) }}</i>
             </div>
             <div class="otp-group-footer-images">
-              <img v-for="(webItem,index) in item.val.slice(0,5).reverse()"
+              <img v-for="(webItem,index) in item.tabs.slice(0,5).reverse()"
                    :style="{zIndex:index,right:(index*14+10)+'px'}"
                    :key="index" :src="webItem.favIconUrl">
             </div>
           </div>
+          <!--          标签组排序DOM-->
           <div class="otp-tab-item-sotr">
             <div @click.stop="setGroupSort(index,0)" v-if="index>0">
-              <sort  ></sort>
+              <sort></sort>
             </div>
             <div @click.stop="setGroupSort(index,1)" v-if="index<tabGroups.length-1">
-              <sort  style="transform: rotate(180deg)"></sort>
+              <sort style="transform: rotate(180deg)"></sort>
             </div>
           </div>
         </div>
@@ -61,10 +62,18 @@ import {
   removeItem,
   setStorage
 } from '@/libs/Storage';
-import { getCollectTabs, getTabsApi, modifyGroupName, saveTabGroupApi, saveTabsApi } from '../../../api/OtherApi';
+import {
+  getCollectTabs,
+  getTabsApi,
+  modifyGroupName,
+  saveTabGroupApi,
+  saveTabsApi,
+  setTabGroupSort
+} from '../../../api/OtherApi';
 import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 import Sort from '../../components/icon/Sort.vue';
+
 export default {
   name: 'TabGroup',
   components: { Sort },
@@ -80,26 +89,31 @@ export default {
     };
   },
   methods: {
+    /**
+     * 排序事件
+     * @param index
+     * @param type
+     */
     setGroupSort (index, type) {
       console.log(type);
       let tabGroups = [...this.tabGroups];
       let target = tabGroups[index];
       if (type === 0) {
-        let temp = tabGroups[ index - 1 ];
+        let temp = tabGroups[index - 1];
         tabGroups[index - 1] = target;
         tabGroups[index] = temp;
       }
       if (type === 1) {
-        let temp = tabGroups[ index + 1 ];
-       tabGroups[index + 1] = target;
-       tabGroups[index] = temp;
+        let temp = tabGroups[index + 1];
+        tabGroups[index + 1] = target;
+        tabGroups[index] = temp;
       }
       this.tabGroups = tabGroups;
-     if (isAuthorization()) {
-
-     } else {
-       setStorage(CACHE_TABS_GROUP, JSON.stringify(tabGroups));
-     }
+      if (isAuthorization()) {
+        setTabGroupSort(tabGroups.map(t => t.id));
+      } else {
+        setStorage(CACHE_TABS_GROUP, JSON.stringify(tabGroups));
+      }
     },
     /**
      * 收起标签
@@ -114,7 +128,6 @@ export default {
      * @param res
      */
     filterUpTab (res) {
-      let time = dateFormatStr();
       let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
       if (isEmpty(sites)) {
         return;
@@ -123,11 +136,11 @@ export default {
         site.path = site.url;
       }
       this.tabGroupItem = {
-        time: time,
+        createDate: new Date().getTime() / 1000,
         tabGroup: new Date().getTime(),
         lock: false,
-        val: sites,
-        tabGroupName: '未命名标签组'
+        tabs: sites,
+        name: '未命名标签组'
       };
       this.saveTabs(this.tabGroupItem);
     },
@@ -139,7 +152,7 @@ export default {
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       this.changeTabItem(groupItem, 0);
       if (isAuthorization()) {
-        saveTabGroupApi(groupItem.val).then((res) => {
+        saveTabGroupApi(groupItem.tabs).then((res) => {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
         });
       }
@@ -161,12 +174,14 @@ export default {
         return;
       }
       let dragGroup = this.tabGroups[index];
+      debugger;
       let newtab = Object.assign({}, this.currentDragstartTab);
       newtab.id = new Date().getTime();
-      dragGroup.val.splice(0, 0, newtab);
+      dragGroup.tabs.splice(0, 0, newtab);
       newtab.createDate = new Date().getTime();
       newtab.tabGroup = dragGroup.tabGroup;
       newtab.sort = 0;
+      newtab.tabGroupId = dragGroup.id;
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       if (isAuthorization()) {
         saveTabsApi([newtab]).then((res) => {
@@ -187,7 +202,7 @@ export default {
     updateGroupName (e) {
       if (isAuthorization()) {
         let item = this.tabGroups[this.activeIndex];
-        modifyGroupName(item.tabGroup, item.tabGroupName);
+        modifyGroupName(item.id, item.name);
       }
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
     },
@@ -289,8 +304,8 @@ export default {
         this.collectTabs = { tabGroup: 'collect_id', val: JSON.parse(collectTabs) };
       }
       for (let re of _res) {
-        if (isEmpty(re.tabGroupName)) {
-          re.tabGroupName = '未命名标签组';
+        if (isEmpty(re.name)) {
+          re.name = '未命名标签组';
         }
       }
       this.tabGroups = _res;
@@ -306,7 +321,7 @@ export default {
       }
       let tgs = [];
       for (let tabGroup of this.tabGroups) {
-        for (let valElement of tabGroup.val) {
+        for (let valElement of tabGroup.tabs) {
           if (isEmpty(valElement.title)) {
             continue;
           }
@@ -315,13 +330,13 @@ export default {
           }
         }
       }
-      this.changeTabItem({ val: tgs, time: null }, -1);
+      this.changeTabItem({ tabs: tgs, time: null }, -1);
     },
     exportHtmlBtn () {
       let tabGroups = [...this.tabGroups];
       let collectTabs = getStorage('collect_tabs');
       if (!isEmpty(collectTabs)) {
-        collectTabs = { tabGroup: 'collect_id', tabGroupName: '我的收藏', time: '', val: JSON.parse(collectTabs) };
+        collectTabs = { tabGroup: 'collect_id', name: '我的收藏', time: '', val: JSON.parse(collectTabs) };
         tabGroups.splice(0, 0, collectTabs);
       }
       exportHtml(tabGroups);
@@ -330,9 +345,9 @@ export default {
       let createTime = new Date();
       this.tabGroups.splice(0, 0, {
         tabGroup: createTime.getTime(),
-        tabGroupName: '未命名标签组',
+        name: '未命名标签组',
         time: dateFormatStr(createTime),
-        val: []
+        tabs: []
       });
       setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroups));
       this.changeTabItem(this.tabGroups[0], 0);
@@ -359,7 +374,7 @@ export default {
           setStorage('collect_tabs', JSON.stringify(item.val));
         }
       } else {
-        if (isEmpty(item.val)) {
+        if (isEmpty(item.tabs)) {
           this.tabGroups.splice(this.activeIndex, 1);
         } else {
           this.tabGroups.splice(this.activeIndex, 1, item);
@@ -453,7 +468,7 @@ export default {
       }
     }
 
-    .otp-tab-item-info:hover .otp-tab-item-sotr{
+    .otp-tab-item-info:hover .otp-tab-item-sotr {
       display: flex;
     }
 
@@ -463,7 +478,7 @@ export default {
       align-items: center;
       padding: 0 20px;
 
-      .otp-tab-item-sotr{
+      .otp-tab-item-sotr {
         display: none;
         position: absolute;
         top: 10px;

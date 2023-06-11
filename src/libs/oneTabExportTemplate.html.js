@@ -1,16 +1,19 @@
+import { dateFormatStr } from '@/libs/util';
+
 export const getHtml = (tabs) => {
   let templateBody = '';
   for (let gr of tabs) {
-    let tabGroupName = gr.tabGroupName || '未命名标签组';
-    let length = gr.val ? gr.val.length : 0;
+    let tabGroupName = gr.name || '未命名标签组';
+    let time = dateFormatStr(new Date(gr.createDate * 1000), 'yyyy-MM-dd');
+    let length = gr.tabs ? gr.tabs.length : 0;
     templateBody += '  <div class="one-tab-pro-group-item">\n' +
       '    <div class="one-tab-pro-group-item-title">\n' +
       '      <h3>\n' +
-      '        ' + tabGroupName + ' - ' + length + '个标签页 ' + gr.time + '\n' +
+      '        ' + tabGroupName + ' - ' + length + '个标签页 ' + time + '\n' +
       '      </h3>\n' +
       '    </div>\n' +
       '    <div class="one-tab-group-list">';
-    for (let grElement of gr.val) {
+    for (let grElement of gr.tabs) {
       let favIconUrl = grElement.favIconUrl || 'https://bdimage.miniits.com/common/onetab_pro_export_null_logo.png';
       let path = grElement.path;
 
