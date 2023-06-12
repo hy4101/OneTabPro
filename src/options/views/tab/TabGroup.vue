@@ -157,6 +157,8 @@ export default {
       if (isAuthorization()) {
         saveTabGroupApi(groupItem.tabs).then((res) => {
           setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data.data));
+          this.tabGroups = res.data.data;
+          this.changeTabItem(res.data.data[0], 0);
         });
       }
     },

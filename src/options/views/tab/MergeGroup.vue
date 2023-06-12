@@ -5,7 +5,7 @@
       <div class="otp-merge-group-dialog">
 
         <div class="otp-group-from otp-group-layout">
-          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(0,index)"
+          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(0,index)" :key="item.id"
                :class="['otp-group-item',index===leftIndex?'active-item':'']">
             <div>
               {{ item.name }}
@@ -23,7 +23,7 @@
         </h3>
 
         <div class="otp-group-to otp-group-layout">
-          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(1,index)"
+          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(1,index)" :key="item.id"
                :class="['otp-group-item',index===rightIndex?'active-item':'']">
             <div>
               {{ item.name }}
@@ -88,6 +88,7 @@ export default {
       }
       if (isAuthorization()) {
         mergeTabGroup(left.id, right.id).then((res) => {
+          this.tabGroup.splice(this.rightIndex, 1, right);
           this.tabGroup.splice(this.leftIndex, 1);
           toast('合并成功');
         });
