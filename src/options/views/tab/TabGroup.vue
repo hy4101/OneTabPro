@@ -401,7 +401,7 @@ export default {
         }
       } else {
         if (isEmpty(item.tabs)) {
-          this.tabGroups.splice(this.activeIndex, 1);
+         // this.tabGroups.splice(this.activeIndex, 1);
         } else {
           this.tabGroups.splice(this.activeIndex, 1, item);
         }

@@ -151,6 +151,7 @@ export default {
           }
 
           let groupItem = {
+            createDate: new Date().getTime() / 1000,
             time: time,
             tabGroup: new Date().getTime() + i,
             lock: false,

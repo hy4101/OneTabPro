@@ -46,7 +46,7 @@
         </div>
         <div class="login-btn">
           <div>
-            <i class="el-icon-arrow-right" @click="loginOrRegistered" type="ios-arrow-dropright-circle"/>
+            <i class="el-icon-arrow-right" @click="isLoginTip" type="ios-arrow-dropright-circle"/>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
 
 <script>
 import {
-  CACHE_TABS_GROUP,
+  CACHE_TABS_GROUP, getStorage,
   getUserInfo, setStorage,
   setUserInfo
 } from '../../../libs/Storage';
@@ -82,6 +82,31 @@ export default {
     };
   },
   methods: {
+    /**
+     * 登录提示
+     */
+    isLoginTip () {
+      if (isEmpty(this.login.email)) {
+        return toast('请输入邮箱！');
+      }
+      if (isEmpty(this.login.password)) {
+        return toast('请输入密码！');
+      }
+      let tabs = getStorage('cache_tabs_group');
+      let s = getStorage('collect_tabs');
+      if (!isEmpty(tabs) || !isEmpty(s)) {
+        this.$confirm('当前本地有未同步的数据，登录（注册）后将被云端数据覆盖，建议导出备份后再重新操作', '登录/注册提示', {
+          confirmButtonText: '取消操作',
+          cancelButtonText: '确认—并覆盖数据',
+          type: 'warning'
+        }).then(() => {
+        }).catch(() => {
+          this.loginOrRegistered();
+        });
+      } else {
+        this.loginOrRegistered();
+      }
+    },
     /**
      * 登录或注册
      */
