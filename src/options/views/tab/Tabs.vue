@@ -68,7 +68,7 @@
                   <div @click="onSite(site,index)" class="fsb-sl-info">
                     {{ site.title }}
                   </div>
-                  <div v-if="activeGroupIndex<0">——[ 组：{{ site.groupName }} ]</div>
+                  <div v-if="activeGroupIndex<0&&tabGroupItem.tabGroup!=='collect_id'">——【 来自：{{ site.groupName }} 】</div>
                 </div>
               </div>
             </div>

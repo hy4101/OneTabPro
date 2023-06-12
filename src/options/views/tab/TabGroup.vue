@@ -70,7 +70,7 @@ import {
   saveTabsApi,
   setTabGroupSort
 } from '../../../api/OtherApi';
-import { dateFormatStr, getTabs, isEmpty, exportHtml } from '../../../libs/util.js';
+import { dateFormatStr, getTabs, isEmpty, exportHtml, toast, uuid } from '../../../libs/util.js';
 import eventBus from '@/libs/EventBus';
 import Sort from '../../components/icon/Sort.vue';
 
@@ -140,7 +140,7 @@ export default {
       this.tabGroupItem = {
         createDate: currentTime / 1000,
         tabGroup: currentTime,
-        id: currentTime,
+        id: uuid(),
         lock: false,
         tabs: sites,
         name: groupName
@@ -168,11 +168,11 @@ export default {
      * @param groups
      */
     importOneTabData (groups) {
-      debugger;
       for (let i = 0; i < groups.length; i++) {
         let group = groups[i];
         this.filterUpTab(group, '来自：导入OneTab-' + (i + 1));
       }
+      toast('导入成功');
       this.initTabs();
     },
     /**
@@ -307,7 +307,7 @@ export default {
           return;
         }
         setStorage(COLLECT_TABS, JSON.stringify(_res));
-        this.collectTabs = { tabGroup: 'collect_id', val: _res };
+        this.collectTabs = { tabGroup: 'collect_id', tabs: _res };
       });
     },
     /**
@@ -318,7 +318,7 @@ export default {
     setTabGroup (_res, isChange) {
       let collectTabs = getStorage('collect_tabs');
       if (!isEmpty(collectTabs)) {
-        this.collectTabs = { tabGroup: 'collect_id', val: JSON.parse(collectTabs) };
+        this.collectTabs = { tabGroup: 'collect_id', tabs: JSON.parse(collectTabs) };
       }
       for (let re of _res) {
         if (isEmpty(re.name)) {
@@ -354,7 +354,7 @@ export default {
       let tabGroups = [...this.tabGroups];
       let collectTabs = getStorage('collect_tabs');
       if (!isEmpty(collectTabs)) {
-        collectTabs = { tabGroup: 'collect_id', name: '我的收藏', time: '', val: JSON.parse(collectTabs) };
+        collectTabs = { tabGroup: 'collect_id', name: '我的收藏', time: '', tabs: JSON.parse(collectTabs) };
         tabGroups.splice(0, 0, collectTabs);
       }
       exportHtml(tabGroups);

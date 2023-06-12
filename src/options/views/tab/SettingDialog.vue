@@ -91,7 +91,6 @@ export default {
       let groups = [];
       let group = [];
       for (let line of lines) {
-        console.log(line);
         if (isEmpty(line) && !isEmpty(group)) {
           groups.push([...group]);
           group = [];

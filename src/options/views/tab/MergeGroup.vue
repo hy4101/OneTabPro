@@ -58,6 +58,9 @@ export default {
     show (v) {
       if (v) {
         this.mergeGroupDialogVisible = v;
+        this.leftIndex = null;
+        this.rightIndex = null;
+        this.initMergeGroup();
       }
     }
   },
@@ -88,9 +91,14 @@ export default {
       }
       if (isAuthorization()) {
         mergeTabGroup(left.id, right.id).then((res) => {
+          right.tabs = right.tabs.concat(left.tabs);
           this.tabGroup.splice(this.rightIndex, 1, right);
           this.tabGroup.splice(this.leftIndex, 1);
           toast('合并成功');
+
+          this.leftIndex = null;
+          this.rightIndex = null;
+          EventBus.$emit('refresh');
         });
       } else {
         right.tabs = right.tabs.concat(left.tabs);
@@ -98,10 +106,10 @@ export default {
         this.tabGroup.splice(this.leftIndex, 1);
         setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroup));
         toast('合并成功');
+        this.leftIndex = null;
+        this.rightIndex = null;
+        EventBus.$emit('refresh');
       }
-      this.leftIndex = null;
-      this.rightIndex = null;
-      EventBus.$emit('refresh');
     },
     selectTabGroup (type, index) {
       if (type === 0) {
@@ -137,7 +145,7 @@ export default {
     }
   },
   mounted () {
-    this.initMergeGroup();
+    // this.initMergeGroup();
   }
 };
 </script>
