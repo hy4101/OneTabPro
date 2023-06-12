@@ -154,8 +154,9 @@ export default {
             time: time,
             tabGroup: new Date().getTime() + i,
             lock: false,
-            val: sites,
-            tabGroupName: tabGroupName[0]
+            tabs: sites,
+            tabGroupName: tabGroupName[0],
+            name: tabGroupName[0]
           };
           groupData.push(groupItem);
         }
