@@ -265,7 +265,8 @@ export default {
       if (!isEmpty(this.sendTab)) {
         let newtab = Object.assign({}, this.sendTab);
         newtab.createDate = new Date().getTime();
-        newtab.tabGroup = _res[0].tabGroup;
+        newtab.path = newtab.url;
+        // newtab.tabGroup = _res[0].tabGroup;
         saveTabsApi([newtab]).then((res) => {
           this.initTabs();
         });
@@ -401,7 +402,7 @@ export default {
         }
       } else {
         if (isEmpty(item.tabs)) {
-         // this.tabGroups.splice(this.activeIndex, 1);
+          // this.tabGroups.splice(this.activeIndex, 1);
         } else {
           this.tabGroups.splice(this.activeIndex, 1, item);
         }
