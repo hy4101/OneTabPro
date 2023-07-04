@@ -68,7 +68,8 @@
                   <div @click="onSite(site,index)" class="fsb-sl-info">
                     {{ site.title }}
                   </div>
-                  <div v-if="activeGroupIndex<0&&tabGroupItem.tabGroup!=='collect_id'">——【 来自：{{ site.groupName }} 】</div>
+                  <div v-if="activeGroupIndex<0&&tabGroupItem.tabGroup!=='collect_id'">——【 来自：{{ site.groupName }} 】
+                  </div>
                 </div>
               </div>
             </div>
@@ -221,7 +222,11 @@ export default {
     toolbarBtn (type) {
       if (0 === type) {
         this.tabGroupItem.tabs.forEach(item => {
-          window.open(item.path, '_blank');
+          if (item.path.includes('chrome://') || item.path.includes('edge://')) {
+            chrome.tabs.create({ url: item.path });
+          } else {
+            window.open(item.path, '_blank');
+          }
         });
       }
       if (1 === type) {

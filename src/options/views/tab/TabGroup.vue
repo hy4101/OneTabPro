@@ -128,12 +128,14 @@ export default {
      * @param res
      */
     filterUpTab (res, groupName = '未命名标签组') {
-      let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
+      // let sites = res.filter(s => !s.url.startsWith('chrome://newtab/') && !s.url.startsWith('chrome-extension://'));
+      let sites = res;
       if (isEmpty(sites)) {
         return;
       }
       for (let site of sites) {
         site.path = site.url;
+        site.id = uuid();
         site.tabGroupName = groupName;
       }
       let currentTime = new Date().getTime();
@@ -168,9 +170,11 @@ export default {
      * @param groups
      */
     importOneTabData (groups) {
+      let index = groups.length;
       for (let i = 0; i < groups.length; i++) {
         let group = groups[i];
-        this.filterUpTab(group, '来自：导入OneTab-' + (i + 1));
+        this.filterUpTab(group, '来自：导入OneTab-' + (index));
+        --index;
       }
       toast('导入成功');
       this.initTabs();

@@ -1,12 +1,12 @@
 <template>
   <div class="otp-merge-group">
-    <el-dialog title="合并分组" :visible.sync="mergeGroupDialogVisible" width="50%"
+    <el-dialog title="合并分组" :visible.sync="mergeGroupDialogVisible" width="30%"
                :before-close="closeDialog">
       <div class="otp-merge-group-dialog">
 
         <div class="otp-group-from otp-group-layout">
           <div v-for="(item,index) in tabGroup" @click="selectTabGroup(0,index)" :key="item.id"
-               :class="['otp-group-item',index===leftIndex?'active-item':'']">
+               :class="['otp-group-item', leftIndexs.includes(index)?'active-item':'']">
             <div>
               {{ item.name }}
             </div>
@@ -16,33 +16,29 @@
             </div>
           </div>
         </div>
-        <h3 class="otp-merge-tip">
-          <!--          <i class="el-icon-sort-up" style="margin-right: 10px;color:#939cac"></i>-->
-          <!--          <i class="el-icon-sort-up" style="margin-right: 10px;color:#939cac"></i>-->
-          合并到
-        </h3>
-
-        <div class="otp-group-to otp-group-layout">
-          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(1,index)" :key="item.id"
-               :class="['otp-group-item',index===rightIndex?'active-item':'']">
-            <div>
-              {{ item.name }}
-            </div>
-            <div>
-              <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.tabs.length }}</i>
-              <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.createDate * 1000) }}</i>
-            </div>
-          </div>
-        </div>
+        <!--        <div class="otp-group-to otp-group-layout">-->
+        <!--          <div v-for="(item,index) in tabGroup" @click="selectTabGroup(1,index)" :key="item.id"-->
+        <!--               :class="['otp-group-item',index===rightIndex?'active-item':'']">-->
+        <!--            <div>-->
+        <!--              {{ item.name }}-->
+        <!--            </div>-->
+        <!--            <div>-->
+        <!--              <i class="el-icon-paperclip" style="margin-right: 10px;color:#939cac"> {{ item.tabs.length }}</i>-->
+        <!--              <i class="el-icon-time" style="color:#939cac"> {{ formatTime(item.createDate * 1000) }}</i>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
-      <el-button type="primary" style="margin-top: 30px;width:125px" @click="saveMergeTabGroup">确认</el-button>
+      <el-button type="primary" :disabled="disabledMerging" style="margin-top: 30px;" @click="saveMergeTabGroup">
+        确认合并{{ leftIndexs.length > 0 ? '(已选' + leftIndexs.length + '组)' : '' }}
+      </el-button>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getTabsApi, mergeTabGroup } from '../../../api/OtherApi';
-import { dateFormatStr, isEmpty, toast } from '../../../libs/util';
+import { getTabsApi, mergeTabGroup, mergeTabGroup2 } from '../../../api/OtherApi';
+import { dateFormatStr, isEmpty, toast, uuid } from '../../../libs/util';
 import { CACHE_TABS_GROUP, getStorage, isAuthorization, setStorage } from '@/libs/Storage';
 import EventBus from '@/libs/EventBus';
 
@@ -60,60 +56,76 @@ export default {
         this.mergeGroupDialogVisible = v;
         this.leftIndex = null;
         this.rightIndex = null;
+        this.leftIndexs = [];
         this.initMergeGroup();
       }
     }
   },
   data () {
     return {
+      disabledMerging: false,
+      mergeTitle: '合并分组',
       mergeGroupDialogVisible: false,
       tabGroup: [],
+      leftIndexs: [],
       leftIndex: null,
       rightIndex: null
     };
   },
   methods: {
     saveMergeTabGroup () {
-      let left = Object.assign({}, this.tabGroup[this.leftIndex]);
-      let right = Object.assign({}, this.tabGroup[this.rightIndex]);
+      if (this.leftIndexs.length <= 1) {
+        return toast('请选择需要合并的组');
+      }
 
-      if (isEmpty(left)) {
-        toast('请选择需要合并的组(左边)');
-        return;
+      this.disabledMerging = true;
+      let tabGroup = [...this.tabGroup];
+      let merger = [];
+      let mergerGroupIds = [];
+      for (const index of this.leftIndexs) {
+        let tab = tabGroup[index];
+        merger = merger.concat(tab.tabs);
+        mergerGroupIds.push(tab.id);
       }
-      if (isEmpty(right)) {
-        toast('请选择需要合并的目标组(右边)');
-        return;
-      }
-      if (left.id === right.id) {
-        toast('无法从自己合并到自己组中');
-        return;
-      }
+
+      tabGroup = tabGroup.filter((e, index) => !this.leftIndexs.includes(index));
+
+      let newTab = {
+        createDate: new Date().getTime(),
+        id: uuid(),
+        name: '来自：合并的标签组',
+        tabGroup: new Date().getTime(),
+        tabs: merger
+      };
+      tabGroup.splice(0, 0, newTab);
       if (isAuthorization()) {
-        mergeTabGroup(left.id, right.id).then((res) => {
-          right.tabs = right.tabs.concat(left.tabs);
-          this.tabGroup.splice(this.rightIndex, 1, right);
-          this.tabGroup.splice(this.leftIndex, 1);
+        mergeTabGroup2(mergerGroupIds).then((res) => {
+          this.disabledMerging = false;
+          let _res = res.data.data;
+          this.tabGroup = _res;
           toast('合并成功');
-
-          this.leftIndex = null;
-          this.rightIndex = null;
+          setStorage(CACHE_TABS_GROUP, JSON.stringify(res.data));
           EventBus.$emit('refresh');
         });
       } else {
-        right.tabs = right.tabs.concat(left.tabs);
-        this.tabGroup.splice(this.rightIndex, 1, right);
-        this.tabGroup.splice(this.leftIndex, 1);
+        this.disabledMerging = false;
+        this.tabGroup = tabGroup;
         setStorage(CACHE_TABS_GROUP, JSON.stringify(this.tabGroup));
         toast('合并成功');
-        this.leftIndex = null;
-        this.rightIndex = null;
         EventBus.$emit('refresh');
       }
+      this.leftIndexs = [];
     },
     selectTabGroup (type, index) {
       if (type === 0) {
         this.leftIndex = index;
+        let ids = [...this.leftIndexs];
+        if (!ids.includes(index)) {
+          ids.push(index);
+        } else {
+          ids = ids.filter(i => i !== index);
+        }
+        this.leftIndexs = ids;
       }
       if (type === 1) {
         this.rightIndex = index;
@@ -171,6 +183,8 @@ export default {
 
   .otp-merge-group-dialog {
     display: flex;
+    //  flex-direction: column;
+    // height: 500px;
 
     .merge-title {
       padding: 20px;

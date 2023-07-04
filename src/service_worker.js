@@ -34,7 +34,6 @@ chrome.runtime.onInstalled.addListener((details) => {
 // 监听标签页切换事件
 chrome.tabs.onActivated.addListener((activeInfo) => {
   chrome.tabs.get(activeInfo.tabId, (tab) => {
-    console.log(tab.index);
     // 判断是否只在右边有标签页时
     chrome.tabs.query({ pinned: true }, (tabs) => {
       let _tabs = tabs.filter(t => t.url.includes('chrome-extension://')).length;

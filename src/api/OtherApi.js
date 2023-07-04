@@ -170,3 +170,13 @@ export const deleteTabGroupApi = (id) => {
 export const mergeTabGroup = (id, targetId) => {
   return axios.post(TAB_GROUP_URL + 'merge-group/' + id + '/' + targetId);
 };
+
+/**
+ *
+ * 优化合并功能，支持同时合并多组
+ * @param ids
+ * @returns {AxiosPromise<any>}
+ */
+export const mergeTabGroup2 = (ids) => {
+  return axios.post(TAB_GROUP_URL + 'merge-group2', ids);
+};

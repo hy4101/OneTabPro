@@ -87,6 +87,10 @@ export default {
   },
   methods: {
     importOneTabData () {
+      let oneTabData = this.oneTabData;
+      if (isEmpty(oneTabData)) {
+        return toast('请黏贴需要导入的数据');
+      }
       var lines = this.oneTabData.split('\n');
       let groups = [];
       let group = [];
@@ -99,7 +103,7 @@ export default {
           group.push({ url: info[0], title: info[1] });
         }
       }
-      EventBus.$emit('importOneTabData', groups);
+      EventBus.$emit('importOneTabData', groups.reverse());
     },
     onChange (e) {
       let reader = new FileReader();

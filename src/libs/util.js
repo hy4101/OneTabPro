@@ -103,18 +103,19 @@ export const getTabs = (callback) => {
       }
       chrome.tabs.remove(needSaveTab.id);
     });
-    _target = _target.filter((item, index, self) =>
-      index === self.findIndex(t => t.url === item.url)
-    );
+    _target = _target.filter((item, index, self) => index === self.findIndex(t => t.url === item.url));
     let mine = [];
     for (let targetElement of _target) {
-      if (targetElement.url.startsWith('edge//newtab/') ||
-        targetElement.url.startsWith('chrome://') ||
-        targetElement.url.startsWith('edge://') ||
-        targetElement.url.startsWith('chrome//') ||
-        (targetElement.pinned && +fixedTab === 1)) {
+      if (targetElement.title === 'OneTab Pro') {
         continue;
       }
+      // if (targetElement.url.startsWith('edge//newtab/') ||
+      //   targetElement.url.startsWith('chrome://') ||
+      //   targetElement.url.startsWith('edge://') ||
+      //   targetElement.url.startsWith('chrome//') ||
+      //   (targetElement.pinned && +fixedTab === 1)) {
+      //   continue;
+      // }
       mine.push(targetElement);
     }
     return callback(mine);
@@ -140,10 +141,12 @@ export const exportHtml = (tabs) => {
  * 打开网站
  */
 export const openSite = (url) => {
-  if (!url.includes('https://') && !url.includes('http://')) {
+  if (url.includes('https://') || url.includes('http://')) {
     url = 'http://' + url;
+    window.open(url, '_blank');
+  } else {
+    chrome.tabs.create({ url: url });
   }
-  window.open(url, '_blank');
 };
 
 /**
