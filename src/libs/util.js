@@ -142,7 +142,7 @@ export const exportHtml = (tabs) => {
  */
 export const openSite = (url) => {
   if (url.includes('https://') || url.includes('http://')) {
-    url = 'http://' + url;
+    // url = 'http://' + url;
     window.open(url, '_blank');
   } else {
     chrome.tabs.create({ url: url });
