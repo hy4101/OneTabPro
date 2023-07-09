@@ -3,7 +3,7 @@
   "name": "OneTab Pro",
   "default_locale": "zh_CN",
   "description": "__MSG_extDescription__",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "options_page": "options.html",
   "icons": {
     "16": "36.png",

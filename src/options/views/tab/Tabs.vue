@@ -188,6 +188,10 @@ export default {
       }
     },
     onSite (item, index) {
+      if (isEmpty(item.path)) {
+        toast('该链接异常，无URL地址,建议删除');
+        return;
+      }
       let ds = getStorage('delete_site') || 2;
       if (1 === +ds) {
         this.deleteItem(item, index);
@@ -222,6 +226,9 @@ export default {
     toolbarBtn (type) {
       if (0 === type) {
         this.tabGroupItem.tabs.forEach(item => {
+          if (isEmpty(item.path)) {
+            item.path = 'about:blank';
+          }
           if (item.path.includes('chrome://') || item.path.includes('edge://')) {
             chrome.tabs.create({ url: item.path });
           } else {
