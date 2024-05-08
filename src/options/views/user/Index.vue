@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { getUserInfo, isAuthorization, setUserInfo } from '../../../libs/Storage';
+import { getUserInfo, isAuthorization, removeUserInfo, setUserInfo } from '../../../libs/Storage';
 import { toast } from '@/libs/util';
 import Login from './Login.vue';
 import { logout, settingUserAvatarApi } from '@/api/UserApi';
@@ -78,12 +78,13 @@ export default {
   },
   methods: {
     logout () {
-      this.$confirm('退出后将清除本地信息？', '确认信息', {
+      this.$confirm('确认退出？', '确认信息', {
         confirmButtonText: '退出',
         cancelButtonText: '取消',
         callback: (res) => {
           if ('confirm' === res) {
-            localStorage.clear();
+           // localStorage.clear();
+            removeUserInfo();
             toast('退出成功');
             this.isAuthorization = false;
             logout();

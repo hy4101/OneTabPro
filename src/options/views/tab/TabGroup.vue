@@ -233,12 +233,29 @@ export default {
       }
       return dateFormatStr(new Date(v), 'yyyy-MM-dd');
     },
+    notNet: function (isChange) {
+      let temp = getStorage(CACHE_TABS_GROUP);
+      if (!isEmpty(temp)) {
+        temp = JSON.parse(temp);
+        this.setTabGroup(temp, isChange);
+      }
+      temp = getStorage(COLLECT_TABS);
+      if (!isEmpty(temp)) {
+        temp = JSON.parse(temp);
+        this.collectTabs = { tabGroup: 'collect_id', tabs: temp };
+      }
+    } ,
     /**
      * 初始化
      */
     initTabs (isChange = true) {
+      this.notNet(isChange);
       if (isAuthorization()) {
         getTabsApi().then((res) => {
+          if (res.status != 200) {
+            console.log('!200');
+            return;
+          }
           let _res = res.data.data;
           this.saveSendTab(_res);
           if (isEmpty(_res)) {
@@ -248,29 +265,20 @@ export default {
           this.setTabGroup(_res, isChange);
         });
         this.getCollectTabData();
-      } else {
-        let temp = getStorage(CACHE_TABS_GROUP);
-        if (!isEmpty(temp)) {
-          temp = JSON.parse(temp);
-          this.setTabGroup(temp, isChange);
-        }
-        temp = getStorage(COLLECT_TABS);
-        if (!isEmpty(temp)) {
-          temp = JSON.parse(temp);
-          this.collectTabs = { tabGroup: 'collect_id', tabs: temp };
-        }
       }
+      // else {
+      //   this.notNet(isChange);
+      // }
     },
 
     /**
      * 如何登录的，则去保存发送的标签
      */
-    saveSendTab (_res) {
+    saveSendTab () {
       if (!isEmpty(this.sendTab)) {
         let newtab = Object.assign({}, this.sendTab);
         newtab.createDate = new Date().getTime();
         newtab.path = newtab.url;
-        // newtab.tabGroup = _res[0].tabGroup;
         saveTabsApi([newtab]).then((res) => {
           this.initTabs();
         });

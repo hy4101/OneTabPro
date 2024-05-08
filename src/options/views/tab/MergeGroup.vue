@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getTabsApi, mergeTabGroup, mergeTabGroup2 } from '../../../api/OtherApi';
+import { getTabsApi, mergeTabGroup2 } from '../../../api/OtherApi';
 import { dateFormatStr, isEmpty, toast, uuid } from '../../../libs/util';
 import { CACHE_TABS_GROUP, getStorage, isAuthorization, setStorage } from '@/libs/Storage';
 import EventBus from '@/libs/EventBus';
@@ -144,6 +144,9 @@ export default {
     initMergeGroup () {
       if (isAuthorization()) {
         getTabsApi().then((res) => {
+          if (res.status != 200){
+            return;
+          }
           let _res = res.data.data;
           this.tabGroup = _res;
         });

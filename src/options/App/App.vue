@@ -10,8 +10,7 @@
 <script>
 
 import SelfHeader from '../components/Self-Header.vue';
-import EventBus from '@/libs/EventBus';
-import { setStorage } from '@/libs/Storage';
+import EventBus from '../../libs/EventBus';
 
 export default {
   name: 'options',
@@ -45,7 +44,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
 iframe {
   border: 0;
 }
